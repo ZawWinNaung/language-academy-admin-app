@@ -25,7 +25,6 @@ export default function ClassesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Modal & Form state
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -36,7 +35,6 @@ export default function ClassesPage() {
   });
   const [submitting, setSubmitting] = useState<boolean>(false);
 
-  // Fetch classes and courses from API
   const loadData = async () => {
     try {
       setLoading(true);
@@ -51,7 +49,6 @@ export default function ClassesPage() {
       if (classJson.success) setClasses(classJson.data);
       if (courseJson.success) {
         setCourses(courseJson.data);
-        // Pre-select the first course in dropdown if available
         if (courseJson.data.length > 0) {
           setFormData((prev) => ({
             ...prev,
@@ -70,7 +67,6 @@ export default function ClassesPage() {
     loadData();
   }, []);
 
-  // Handle class creation
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.course_id) {
@@ -105,7 +101,6 @@ export default function ClassesPage() {
     }
   };
 
-  // Filtered class list
   const filteredClasses = classes.filter(
     (c) =>
       c.class_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -114,7 +109,6 @@ export default function ClassesPage() {
       c.status.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // Helper for dynamic status badges
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":

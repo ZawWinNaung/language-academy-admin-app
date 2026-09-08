@@ -25,7 +25,6 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Redirect on successful authentication
         router.push("/dashboard");
       } else {
         setErrorMessage(data.message || "Invalid credentials provided.");
@@ -39,7 +38,6 @@ export default function LoginPage() {
 
   return (
     <div className="w-full glass-card rounded-2xl p-8 shadow-2xl relative z-10 border border-slate-800/80 max-w-md mx-auto">
-      {/* Brand Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white font-black text-xl shadow-lg shadow-indigo-500/20 mb-4">
           C
@@ -52,14 +50,12 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Error Banner */}
       {errorMessage && (
         <div className="mb-6 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs text-center font-medium">
           ⚠️ {errorMessage}
         </div>
       )}
 
-      {/* Login Form */}
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">

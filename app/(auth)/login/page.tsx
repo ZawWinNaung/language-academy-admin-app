@@ -8,19 +8,36 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsAuthenticating(true);
+    setErrorMessage("");
 
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 800);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        router.push("/dashboard");
+      } else {
+        setErrorMessage(data.message || "Invalid credentials provided.");
+      }
+    } catch (err) {
+      setErrorMessage("Network error occurred. Please try again.");
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   return (
-    <div className="w-full glass-card rounded-2xl p-8 shadow-2xl relative z-10 border border-slate-800/80">
-      {/* Brand Header */}
+    <div className="w-full glass-card rounded-2xl p-8 shadow-2xl relative z-10 border border-slate-800/80 max-w-md mx-auto">
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white font-black text-xl shadow-lg shadow-indigo-500/20 mb-4">
           C
@@ -33,7 +50,12 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Login Form */}
+      {errorMessage && (
+        <div className="mb-6 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs text-center font-medium">
+          ⚠️ {errorMessage}
+        </div>
+      )}
+
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
@@ -91,7 +113,7 @@ export default function LoginPage() {
 
       <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
         <p className="text-[11px] text-slate-500 font-mono">
-          Restrictive Access
+          Restricted Access • School Staff Only
         </p>
       </div>
     </div>

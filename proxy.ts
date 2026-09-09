@@ -11,6 +11,7 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/teachers") ||
     pathname.startsWith("/classes") ||
     pathname.startsWith("/courses") ||
+    pathname.startsWith("/timetable") ||
     pathname.startsWith("/payment");
 
   const isLoginPage = pathname === "/login";

@@ -8,8 +8,8 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "📊" },
   { name: "Students", href: "/students", icon: "🎓" },
   { name: "Teachers", href: "/teachers", icon: "👨‍🏫" },
-  { name: "Classes", href: "/classes", icon: "🏫" },
   { name: "Courses", href: "/courses", icon: "📚" },
+  { name: "Classes", href: "/classes", icon: "🏫" },
   { name: "Timetable Schedule", href: "/timetable", icon: "📅" },
   { name: "Payment", href: "/payment", icon: "💳" },
 ];

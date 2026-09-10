@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { RowDataPacket } from "mysql2";
+import { signJWT } from "@/lib/auth";
 
 interface AdminRow extends RowDataPacket {
   id: number;
@@ -37,20 +38,28 @@ export async function POST(req: Request) {
       );
     }
 
+    const userPayload = {
+      id: admin.id,
+      name: admin.name,
+      email: admin.email,
+    };
+
+    const token = await signJWT(userPayload);
+
     const response = NextResponse.json(
       {
         success: true,
-        user: { id: admin.id, name: admin.name, email: admin.email },
+        user: userPayload,
       },
       { status: 200 },
     );
 
-    response.cookies.set("admin_session", String(admin.id), {
+    response.cookies.set("admin_session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days session duration
+      maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
     return response;

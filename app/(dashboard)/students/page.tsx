@@ -104,6 +104,7 @@ export default function StudentsPage() {
         loading={loading}
         keyExtractor={(student) => student.id}
         emptyMessage="No active students found matching your search."
+        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
         renderCard={(student) => (
           <StudentCard
             student={student}

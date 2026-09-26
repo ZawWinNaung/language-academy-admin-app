@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import PaymentCard, { Payment } from "@/components/payments/PaymentCard";
-import PaymentFilterBar from "@/components/payments/PaymentFilterBar";
+import { FilterBar } from "@/components/ui/FilterBar";
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -30,6 +30,13 @@ export default function PaymentsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const isFiltered = Boolean(searchQuery || selectedStatus || selectedMonth);
+  const handleReset = () => {
+    setSearchQuery("");
+    setSelectedStatus("");
+    setSelectedMonth("");
   };
 
   useEffect(() => {
@@ -69,17 +76,37 @@ export default function PaymentsPage() {
         </div>
       </div>
 
-      {/* Control Bar & Filters */}
-      <PaymentFilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-        selectedMonth={selectedMonth}
-        onMonthChange={setSelectedMonth}
-        filteredCount={payments.length}
-        totalCount={payments.length}
-      />
+      <FilterBar>
+        <FilterBar.Search
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search student or enrollment ID..."
+        />
+
+        <FilterBar.Group>
+          <FilterBar.Select
+            value={selectedStatus}
+            onChange={setSelectedStatus}
+            placeholder="All Statuses"
+            options={[
+              { label: "Paid", value: "Paid" },
+              { label: "Refunded", value: "Refunded" },
+            ]}
+          />
+
+          <FilterBar.MonthPicker
+            value={selectedMonth}
+            onChange={setSelectedMonth}
+          />
+
+          {isFiltered && <FilterBar.Reset onReset={handleReset} />}
+
+          <FilterBar.Counter
+            filteredCount={payments.length}
+            totalCount={payments.length}
+          />
+        </FilterBar.Group>
+      </FilterBar>
 
       {/* Grid View */}
       {loading ? (

@@ -35,9 +35,7 @@ export default function AddTeacherModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
       <div className="glass-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-800 relative z-10">
         <div className="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
-          <h3 className="font-bold text-white text-sm">
-            Add New Faculty Member
-          </h3>
+          <h3 className="font-bold text-white text-sm">Add New Teacher</h3>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-slate-200 text-base"
@@ -119,7 +117,7 @@ export default function AddTeacherModal({
               disabled={submitting}
               className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-xs font-semibold rounded-xl hover:from-indigo-500 hover:to-indigo-400 shadow-lg shadow-indigo-600/20 disabled:opacity-50 transition-all"
             >
-              {submitting ? "Adding..." : "Save Instructor"}
+              {submitting ? "Adding..." : "Save"}
             </button>
           </div>
         </form>

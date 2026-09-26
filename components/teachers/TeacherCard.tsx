@@ -82,7 +82,7 @@ export default function TeacherCard({
           onClick={() => onEdit?.(teacher)}
           className="text-xs text-indigo-400 hover:text-indigo-300 font-medium px-3 py-1.5 rounded-lg hover:bg-indigo-500/10 transition-colors"
         >
-          Edit
+          Edit Details
         </button>
         <button
           onClick={() => onRemove?.(teacher)}

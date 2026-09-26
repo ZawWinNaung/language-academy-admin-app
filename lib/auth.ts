@@ -1,6 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
 
-// Ensure JWT_SECRET is present
 const secret = process.env.JWT_SECRET;
 
 if (!secret) {

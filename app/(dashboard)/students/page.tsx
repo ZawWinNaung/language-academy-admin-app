@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ControlBar from "@/components/ui/ControlBar";
 import DataGrid from "@/components/ui/DataGrid";
 import StudentCard, { Student } from "@/components/students/StudentCard";
 import AddStudentModal from "@/components/students/AddStudentModal";
+import { FilterBar } from "@/components/ui/FilterBar";
+import { useRouter } from "next/navigation";
 
 export default function StudentsPage() {
+  const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -82,21 +84,27 @@ export default function StudentsPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-indigo-600/20 transition-all border border-indigo-400/30"
+          className="inline-flex items-center justify-center gap-2 bg-linear-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-indigo-600/20 transition-all border border-indigo-400/30"
         >
           <span className="text-base leading-none">+</span> Add New Student
         </button>
       </div>
 
-      {/* Control Bar */}
-      <ControlBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        placeholder="Search by name, email, or phone..."
-        filteredCount={filteredStudents.length}
-        totalCount={students.length}
-        entityName="Active Students"
-      />
+      <FilterBar>
+        <FilterBar.Search
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by name, email, or phone..."
+        />
+
+        <FilterBar.Group>
+          <FilterBar.Counter
+            filteredCount={filteredStudents.length}
+            totalCount={students.length}
+            entityName="Students"
+          />
+        </FilterBar.Group>
+      </FilterBar>
 
       {/* Card Grid View */}
       <DataGrid
@@ -108,7 +116,7 @@ export default function StudentsPage() {
         renderCard={(student) => (
           <StudentCard
             student={student}
-            onView={(st) => console.log("View student:", st)}
+            onView={(st) => router.push(`/students/${st.id}`)}
             onRemove={(st) => console.log("Remove student:", st)}
           />
         )}

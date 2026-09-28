@@ -1,16 +1,20 @@
 "use client";
 
+import React from "react";
 import { FaCalendarAlt, FaUsers, FaChalkboardTeacher } from "react-icons/fa";
 
 export interface ClassDetail {
-  id: number;
-  class_name: string;
-  course_code: string;
-  course_title: string;
+  id?: number;
+  class_id?: number;
+  class_name?: string;
+  name?: string;
+  course_code?: string;
+  course_title?: string;
   start_date: string;
   end_date: string;
-  status: string;
-  active_students: number;
+  status?: string;
+  class_status?: string;
+  active_students?: number;
 }
 
 interface ClassCardProps {
@@ -24,7 +28,10 @@ export default function ClassCard({
   onManage,
   onDelete,
 }: ClassCardProps) {
-  const getStatusBadge = (status: string) => {
+  // Gracefully handle calculated class_status, status, or default fallback
+  const rawStatus = item.class_status || item.status || "Unknown";
+
+  const getStatusBadge = (status: string = "Unknown") => {
     switch (status.toLowerCase()) {
       case "active":
       case "ongoing":
@@ -57,15 +64,20 @@ export default function ClassCard({
     }
   };
 
+  const className = item.class_name || item.name || "Untitled Class";
+  const courseTitle = item.course_title || "Unassigned Course";
+  const courseCode = item.course_code || "N/A";
+  const studentCount = item.active_students ?? 0;
+
   return (
     <div className="glass-card rounded-2xl border border-slate-800/80 p-5 space-y-4 hover:border-slate-700/80 transition-all flex flex-col justify-between">
       {/* Header: Class Name & Status */}
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-bold text-white text-base tracking-tight truncate">
-            {item.class_name}
+            {className}
           </h3>
-          {getStatusBadge(item.status)}
+          {getStatusBadge(rawStatus)}
         </div>
 
         {/* Course Meta Info */}
@@ -75,10 +87,10 @@ export default function ClassCard({
           </div>
           <div className="min-w-0 flex-1">
             <div className="font-semibold text-slate-200 text-xs truncate">
-              {item.course_title}
+              {courseTitle}
             </div>
             <span className="font-mono text-[10px] text-indigo-400 font-bold">
-              {item.course_code}
+              {courseCode}
             </span>
           </div>
         </div>
@@ -89,12 +101,12 @@ export default function ClassCard({
         <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
           <FaCalendarAlt className="text-slate-500 text-xs shrink-0" />
           <span>
-            {item.start_date} → {item.end_date}
+            {item.start_date || "TBD"} → {item.end_date || "TBD"}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 font-mono text-[11px]">
-            <FaUsers className="text-xs" /> {item.active_students} Enrolled
+            <FaUsers className="text-xs" /> {studentCount} Enrolled
           </span>
         </div>
       </div>
@@ -102,12 +114,14 @@ export default function ClassCard({
       {/* Card Actions */}
       <div className="pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
         <button
+          type="button"
           onClick={() => onManage?.(item)}
           className="text-xs text-indigo-400 hover:text-indigo-300 font-medium px-3 py-1.5 rounded-lg hover:bg-indigo-500/10 transition-colors"
         >
           Manage
         </button>
         <button
+          type="button"
           onClick={() => onDelete?.(item)}
           className="text-xs text-rose-400 hover:text-rose-300 font-medium px-3 py-1.5 rounded-lg hover:bg-rose-500/10 transition-colors"
         >

@@ -7,7 +7,7 @@ interface DataGridProps<T> {
   renderCard: (item: T) => ReactNode;
   loading?: boolean;
   emptyMessage?: string;
-  keyExtractor: (item: T) => string | number;
+  keyExtractor: (item: T, index: number) => string | number;
   gridClassName?: string;
 }
 
@@ -37,9 +37,10 @@ export default function DataGrid<T>({
 
   return (
     <div className={gridClassName}>
-      {data.map((item) => (
-        <div key={keyExtractor(item)}>{renderCard(item)}</div>
-      ))}
+      {data.map((item, index) => {
+        const key = keyExtractor(item, index) ?? index;
+        return <div key={key}>{renderCard(item)}</div>;
+      })}
     </div>
   );
 }

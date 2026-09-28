@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import OngoingClassPayments from "@/components/dashboard/OngoingClassPayments";
+import CompletedClassPayments from "@/components/dashboard/CompletedClassPayments";
+import UnpaidFeesOverview from "@/components/dashboard/UnpaidFeesOverview";
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -14,6 +16,7 @@ interface SummaryMetrics {
   ongoingClasses: number;
   monthlyRevenue: number;
   unpaidCount: number;
+  completedUnpaidCount: number;
 }
 
 export default function DashboardPage() {
@@ -22,8 +25,10 @@ export default function DashboardPage() {
     ongoingClasses: 0,
     monthlyRevenue: 0,
     unpaidCount: 0,
+    completedUnpaidCount: 0,
   });
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchSummary = async () => {
       try {
@@ -37,8 +42,10 @@ export default function DashboardPage() {
           let studentsSet = new Set<number>();
           let revenue = 0;
           let unpaid = 0;
+          let completedUnpaid = 0;
 
-          result.data.forEach((cls: any) => {
+          // Ongoing classes metrics
+          (result.data || []).forEach((cls: any) => {
             unpaid += cls.stats.unpaid;
             cls.students.forEach((s: any) => {
               studentsSet.add(s.student_id);
@@ -48,11 +55,17 @@ export default function DashboardPage() {
             });
           });
 
+          // Completed classes unpaid count
+          (result.completed_unpaid_data || []).forEach((cls: any) => {
+            completedUnpaid += cls.stats.unpaid;
+          });
+
           setMetrics({
             activeStudents: studentsSet.size,
             ongoingClasses: result.data.length,
             monthlyRevenue: revenue,
             unpaidCount: unpaid,
+            completedUnpaidCount: completedUnpaid,
           });
         }
       } catch (error) {
@@ -127,23 +140,37 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Pending / Unpaid Payments */}
+        {/* Pending / Unpaid Payments with Completed Class Badge (Option A) */}
         <div className="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 text-xl shrink-0">
             <FaExclamationTriangle />
           </div>
           <div>
             <p className="text-xs font-medium text-slate-400">Unpaid Fees</p>
-            <h3 className="text-2xl font-bold text-white tracking-tight mt-0.5">
-              {loading ? "..." : metrics.unpaidCount}
-            </h3>
+            <div className="flex items-baseline gap-2 mt-0.5">
+              <h3 className="text-2xl font-bold text-white tracking-tight">
+                {loading ? "..." : metrics.unpaidCount}
+              </h3>
+              {!loading && metrics.completedUnpaidCount > 0 && (
+                <span className="text-[10px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md font-semibold">
+                  +{metrics.completedUnpaidCount} completed
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content: Ongoing Classes & Student Payment Status */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm">
-        <OngoingClassPayments />
+      <div className="space-y-6">
+        {/* Ongoing Class Payments component */}
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm">
+          <OngoingClassPayments />
+        </div>
+
+        {/* New Unpaid Fees & Skipped Months Overview */}
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm">
+          <UnpaidFeesOverview />
+        </div>
       </div>
     </div>
   );

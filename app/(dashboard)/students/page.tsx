@@ -1,77 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
-import StudentCard, { Student } from "@/components/students/StudentCard";
+import StudentCard from "@/components/students/StudentCard";
 import AddStudentModal from "@/components/students/AddStudentModal";
 import { FilterBar } from "@/components/ui/FilterBar";
-import { useRouter } from "next/navigation";
+import { useStudents } from "@/hooks/useStudents";
 
 export default function StudentsPage() {
   const router = useRouter();
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    joined_date: "",
-  });
 
-  const loadStudents = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/students");
-      const json = await res.json();
-      if (json.success) setStudents(json.data);
-    } catch (err) {
-      console.error("Failed to load students:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    students,
+    filteredStudents,
+    searchQuery,
+    setSearchQuery,
+    loading,
+    formData,
+    setFormData,
+    submitting,
+    handleCreateStudent,
+  } = useStudents();
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/students", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setIsModalOpen(false);
-        setFormData({ name: "", email: "", phone: "", joined_date: "" });
-        loadStudents();
-      } else {
-        alert(json.message || "Failed to create student");
-      }
-    } catch (err) {
-      console.error("Error adding student:", err);
-    } finally {
-      setSubmitting(false);
+    const success = await handleCreateStudent();
+    if (success) {
+      setIsModalOpen(false);
     }
   };
 
-  const filteredStudents = students.filter(
-    (s) =>
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.phone.includes(searchQuery),
-  );
-
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800/80">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
@@ -106,7 +69,6 @@ export default function StudentsPage() {
         </FilterBar.Group>
       </FilterBar>
 
-      {/* Card Grid View */}
       <DataGrid
         data={filteredStudents}
         loading={loading}
@@ -122,7 +84,6 @@ export default function StudentsPage() {
         )}
       />
 
-      {/* Extracted Registration Modal */}
       <AddStudentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

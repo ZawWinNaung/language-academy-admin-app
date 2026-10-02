@@ -2,20 +2,8 @@
 
 import React from "react";
 import { FaCalendarAlt, FaUsers, FaChalkboardTeacher } from "react-icons/fa";
-
-export interface ClassDetail {
-  id?: number;
-  class_id?: number;
-  class_name?: string;
-  name?: string;
-  course_code?: string;
-  course_title?: string;
-  start_date: string;
-  end_date: string;
-  status?: string;
-  class_status?: string;
-  active_students?: number;
-}
+import { ClassDetail } from "@/types/class";
+import { formatDateForDisplay } from "@/lib/utils/date";
 
 interface ClassCardProps {
   item: ClassDetail;
@@ -101,7 +89,8 @@ export default function ClassCard({
         <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
           <FaCalendarAlt className="text-slate-500 text-xs shrink-0" />
           <span>
-            {item.start_date || "TBD"} → {item.end_date || "TBD"}
+            {formatDateForDisplay(item.start_date) || "TBD"} →{" "}
+            {formatDateForDisplay(item.end_date) || "TBD"}
           </span>
         </div>
         <div className="flex items-center gap-2">

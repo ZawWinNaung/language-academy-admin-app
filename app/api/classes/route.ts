@@ -8,8 +8,8 @@ export async function GET() {
       SELECT 
         c.id,
         c.name AS class_name,
-        c.start_date,
-        c.end_date,
+        DATE_FORMAT(c.start_date, '%Y-%m-%d') AS start_date,
+        DATE_FORMAT(c.end_date, '%Y-%m-%d') AS end_date,
         co.code AS course_code,
         co.title AS course_title,
         COUNT(e.id) AS active_students
@@ -23,12 +23,8 @@ export async function GET() {
 
     const formattedClasses = rows.map((cls: any) => ({
       ...cls,
-      start_date: cls.start_date
-        ? new Date(cls.start_date).toISOString().split("T")[0]
-        : "",
-      end_date: cls.end_date
-        ? new Date(cls.end_date).toISOString().split("T")[0]
-        : "",
+      start_date: cls.start_date || "",
+      end_date: cls.end_date || "",
       status: calculateClassStatus(cls.start_date, cls.end_date),
       class_status: calculateClassStatus(cls.start_date, cls.end_date),
     }));

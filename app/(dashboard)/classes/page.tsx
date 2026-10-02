@@ -1,29 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
-import ClassCard, { ClassDetail } from "@/components/classes/ClassCard";
-import CreateClassModal, {
-  Course,
-} from "@/components/classes/CreateClassModal";
+import ClassCard from "@/components/classes/ClassCard";
+import CreateClassModal from "@/components/classes/CreateClassModal";
 import { FilterBar } from "@/components/ui/FilterBar";
-
-export interface ClassFormData {
-  name: string;
-  course_id: string;
-  start_date: string;
-  end_date: string;
-}
+import { useClasses } from "@/hooks/useClasses";
+import { ClassFormData } from "@/types/class";
+import { ClassDetail } from "@/types/class";
 
 export default function ClassesPage() {
-  const [classes, setClasses] = useState<ClassDetail[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const router = useRouter();
+  const {
+    classes,
+    filteredClasses,
+    courses,
+    loading,
+    searchQuery,
+    setSearchQuery,
+    submitting,
+    handleCreateClass,
+    handleDeleteClass,
+  } = useClasses();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [submitting, setSubmitting] = useState<boolean>(false);
-
   const [formData, setFormData] = useState<ClassFormData>({
     name: "",
     course_id: "",
@@ -31,115 +32,33 @@ export default function ClassesPage() {
     end_date: "",
   });
 
-  const loadData = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const [classRes, courseRes] = await Promise.all([
-        fetch("/api/classes"),
-        fetch("/api/courses"),
-      ]);
-
-      const classJson = await classRes.json();
-      const courseJson = await courseRes.json();
-
-      if (classJson.success) {
-        setClasses(classJson.data);
-      }
-
-      if (courseJson.success) {
-        setCourses(courseJson.data);
-        if (courseJson.data.length > 0) {
-          setFormData((prev) => ({
-            ...prev,
-            course_id: String(courseJson.data[0].id),
-          }));
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load initial data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Keep modal course option default synced with courses list
   useEffect(() => {
-    loadData();
-  }, []);
+    if (courses.length > 0 && !formData.course_id) {
+      setFormData((prev) => ({
+        ...prev,
+        course_id: String(courses[0].id),
+      }));
+    }
+  }, [courses, formData.course_id]);
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
+  const onSubmitModal = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.course_id) {
-      alert("Please select a course.");
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/classes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    const success = await handleCreateClass(formData);
+    if (success) {
+      setIsModalOpen(false);
+      setFormData({
+        name: "",
+        course_id: courses.length > 0 ? String(courses[0].id) : "",
+        start_date: "",
+        end_date: "",
       });
-
-      const json = await res.json();
-      if (json.success) {
-        setIsModalOpen(false);
-        setFormData({
-          name: "",
-          course_id: courses.length > 0 ? String(courses[0].id) : "",
-          start_date: "",
-          end_date: "",
-        });
-        loadData();
-      } else {
-        alert(json.message || "Failed to create class");
-      }
-    } catch (err) {
-      console.error("Error adding class:", err);
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const handleSoftDelete = async (classItem: ClassDetail): Promise<void> => {
-    if (
-      !confirm(`Are you sure you want to delete "${classItem.class_name}"?`)
-    ) {
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/classes/${classItem.id}`, {
-        method: "DELETE",
-      });
-
-      const json = await res.json();
-      if (json.success) {
-        loadData();
-      } else {
-        alert(json.message || "Failed to delete class.");
-      }
-    } catch (err) {
-      console.error("Error deleting class:", err);
-    }
+  const handleManage = (classItem: ClassDetail) => {
+    router.push(`/classes/${classItem.id}`);
   };
-
-  const filteredClasses = classes.filter((c: ClassDetail) => {
-    const query = searchQuery.toLowerCase();
-    const className = (c.class_name || "").toLowerCase();
-    const courseCode = (c.course_code || "").toLowerCase();
-    const courseTitle = (c.course_title || "").toLowerCase();
-    const computedStatus = (c.status || "").toLowerCase();
-
-    return (
-      className.includes(query) ||
-      courseCode.includes(query) ||
-      courseTitle.includes(query) ||
-      computedStatus.includes(query)
-    );
-  });
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -190,8 +109,8 @@ export default function ClassesPage() {
         renderCard={(item: ClassDetail) => (
           <ClassCard
             item={item}
-            onManage={(c: ClassDetail) => console.log("Manage class:", c)}
-            onDelete={handleSoftDelete}
+            onManage={handleManage}
+            onDelete={handleDeleteClass}
           />
         )}
       />
@@ -200,7 +119,7 @@ export default function ClassesPage() {
       <CreateClassModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmitModal}
         courses={courses}
         formData={formData}
         setFormData={setFormData}

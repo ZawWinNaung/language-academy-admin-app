@@ -1,27 +1,16 @@
 "use client";
 
-import React from "react";
-
-export interface Course {
-  id: number;
-  code: string;
-  title: string;
-}
-
-export interface CreateClassFormData {
-  name: string;
-  course_id: string;
-  start_date: string;
-  end_date: string;
-}
+import React, { useRef } from "react";
+import { Course } from "@/types/course";
+import { ClassFormData } from "@/types/class";
 
 interface CreateClassModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   courses: Course[];
-  formData: CreateClassFormData;
-  setFormData: React.Dispatch<React.SetStateAction<CreateClassFormData>>;
+  formData: ClassFormData;
+  setFormData: React.Dispatch<React.SetStateAction<ClassFormData>>;
   submitting: boolean;
 }
 
@@ -34,7 +23,21 @@ export default function CreateClassModal({
   setFormData,
   submitting,
 }: CreateClassModalProps) {
+  const startDateRef = useRef<HTMLInputElement>(null);
+  const endDateRef = useRef<HTMLInputElement>(null);
+
   if (!isOpen) return null;
+
+  const openDatePicker = (ref: React.RefObject<HTMLInputElement | null>) => {
+    if (!ref.current) return;
+    const inputEl = ref.current;
+
+    if ("showPicker" in inputEl && typeof inputEl.showPicker === "function") {
+      inputEl.showPicker();
+    } else {
+      inputEl.focus();
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
@@ -95,32 +98,43 @@ export default function CreateClassModal({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Start Date Picker */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
                 Start Date
               </label>
               <input
+                ref={startDateRef}
                 type="date"
                 required
                 value={formData.start_date}
+                max={formData.end_date || undefined}
+                onKeyDown={(e) => e.preventDefault()}
+                onClick={() => openDatePicker(startDateRef)}
                 onChange={(e) =>
                   setFormData({ ...formData, start_date: e.target.value })
                 }
-                className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 [scheme:dark]"
+                className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
               />
             </div>
+
+            {/* End Date Picker */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
                 End Date
               </label>
               <input
+                ref={endDateRef}
                 type="date"
                 required
                 value={formData.end_date}
+                min={formData.start_date || undefined}
+                onKeyDown={(e) => e.preventDefault()}
+                onClick={() => openDatePicker(endDateRef)}
                 onChange={(e) =>
                   setFormData({ ...formData, end_date: e.target.value })
                 }
-                className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 [scheme:dark]"
+                className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
               />
             </div>
           </div>

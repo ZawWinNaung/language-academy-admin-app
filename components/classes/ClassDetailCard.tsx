@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { FaUserEdit, FaCalendarAlt } from "react-icons/fa";
+import { FaUserEdit } from "react-icons/fa";
 import { ClassDetail } from "@/types/class";
 import { Course } from "@/types/course";
 
@@ -29,7 +29,6 @@ export function ClassDetailCard({
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
 
-  // Helper function to convert dynamic dates to YYYY-MM-DD for native date pickers
   const formatDateForInput = (dateString?: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -37,7 +36,6 @@ export function ClassDetailCard({
     return date.toISOString().split("T")[0];
   };
 
-  // Sync component state when classDetail prop changes
   useEffect(() => {
     if (classDetail) {
       setFormData({
@@ -141,37 +139,26 @@ export function ClassDetailCard({
           )}
         </div>
 
-        {/* Date Pickers Section */}
         <div className="grid grid-cols-2 gap-3">
           {/* Start Date Picker */}
           <div>
             <label className="text-slate-400 block mb-1 font-medium">
               Start Date
             </label>
-            <div className="relative flex items-center">
-              <input
-                ref={startDateRef}
-                type="date"
-                disabled={!isEditing}
-                value={formData.start_date}
-                max={formData.end_date || undefined}
-                onChange={(e) =>
-                  setFormData({ ...formData, start_date: e.target.value })
-                }
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-3 pr-9 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 [scheme:dark]"
-                required
-              />
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => openDatePicker(startDateRef)}
-                  className="absolute right-3 text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none"
-                  title="Open Start Date Picker"
-                >
-                  <FaCalendarAlt className="text-xs" />
-                </button>
-              )}
-            </div>
+            <input
+              ref={startDateRef}
+              type="date"
+              disabled={!isEditing}
+              value={formData.start_date}
+              max={formData.end_date || undefined}
+              onKeyDown={(e) => e.preventDefault()}
+              onClick={() => openDatePicker(startDateRef)}
+              onChange={(e) =>
+                setFormData({ ...formData, start_date: e.target.value })
+              }
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
+              required
+            />
           </div>
 
           {/* End Date Picker */}
@@ -179,30 +166,20 @@ export function ClassDetailCard({
             <label className="text-slate-400 block mb-1 font-medium">
               End Date
             </label>
-            <div className="relative flex items-center">
-              <input
-                ref={endDateRef}
-                type="date"
-                disabled={!isEditing}
-                value={formData.end_date}
-                min={formData.start_date || undefined}
-                onChange={(e) =>
-                  setFormData({ ...formData, end_date: e.target.value })
-                }
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-3 pr-9 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 [scheme:dark]"
-                required
-              />
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => openDatePicker(endDateRef)}
-                  className="absolute right-3 text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none"
-                  title="Open End Date Picker"
-                >
-                  <FaCalendarAlt className="text-xs" />
-                </button>
-              )}
-            </div>
+            <input
+              ref={endDateRef}
+              type="date"
+              disabled={!isEditing}
+              value={formData.end_date}
+              min={formData.start_date || undefined}
+              onKeyDown={(e) => e.preventDefault()}
+              onClick={() => openDatePicker(endDateRef)}
+              onChange={(e) =>
+                setFormData({ ...formData, end_date: e.target.value })
+              }
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
+              required
+            />
           </div>
         </div>
 

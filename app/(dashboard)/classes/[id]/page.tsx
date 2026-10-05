@@ -2,10 +2,8 @@
 
 import React, { use } from "react";
 import Link from "next/link";
-import useSWR from "swr";
 import { FaArrowLeft } from "react-icons/fa";
-import { useClassDetail } from "@/hooks/useClassDetail";
-import { fetchCourses } from "@/services/classService";
+import { useClassDetail } from "@/hooks/classes";
 import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
 import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
 
@@ -20,16 +18,15 @@ export default function ClassDetailPage({
   const {
     classDetail,
     students,
+    courses,
     loading,
     isError,
     savingClass,
     updatingEnrollmentId,
     saveClassMeta,
     changeStudentStatus,
+    refresh,
   } = useClassDetail(classId);
-
-  const { data: coursesRes } = useSWR("/api/courses", fetchCourses);
-  const courses = coursesRes?.data ?? [];
 
   if (loading) {
     return (
@@ -70,9 +67,7 @@ export default function ClassDetailPage({
         </div>
       </div>
 
-      {/* Grid layout with independent self-start heights */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Class Detail Profile Card */}
         <div className="lg:col-span-1">
           <ClassDetailCard
             classDetail={classDetail}
@@ -82,12 +77,14 @@ export default function ClassDetailPage({
           />
         </div>
 
-        {/* Right Column: Enrolled Students Table */}
         <div className="lg:col-span-2">
           <EnrolledStudentsTable
+            classId={Number(classId)}
+            classStatus={classDetail?.class_status}
             students={students}
             updatingId={updatingEnrollmentId}
             onStatusChange={changeStudentStatus}
+            onRefresh={refresh}
           />
         </div>
       </div>

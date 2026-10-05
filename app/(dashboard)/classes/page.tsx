@@ -5,24 +5,56 @@ import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
 import ClassCard from "@/components/classes/ClassCard";
 import CreateClassModal from "@/components/classes/CreateClassModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
-import { useClasses } from "@/hooks/useClasses";
-import { ClassFormData } from "@/types/class";
-import { ClassDetail } from "@/types/class";
+import { usePagination } from "@/hooks/usePagination";
+import {
+  useClassFilters,
+  useClassesData,
+  useCreateClass,
+  useDeleteClass,
+} from "@/hooks/classes";
+import { ClassFormData, ClassDetail } from "@/types/class";
 
 export default function ClassesPage() {
   const router = useRouter();
+  const pageSize = 20;
+  const { currentPage, setCurrentPage, resetPage } = usePagination(1);
   const {
-    classes,
-    filteredClasses,
-    courses,
-    loading,
     searchQuery,
     setSearchQuery,
-    submitting,
-    handleCreateClass,
-    handleDeleteClass,
-  } = useClasses();
+    statusFilter,
+    setStatusFilter,
+    resetFilters,
+    isFiltered,
+  } = useClassFilters({
+    onFilterChange: resetPage,
+  });
+
+  const {
+    classes,
+    courses,
+    pagination,
+    totalCount,
+    statusCounts,
+    loading,
+    mutateClasses,
+  } = useClassesData({
+    currentPage,
+    pageSize,
+    searchQuery,
+    statusFilter,
+  });
+
+  const { submitting, handleCreateClass } = useCreateClass(mutateClasses);
+  const {
+    classToDelete,
+    deleting,
+    initiateDelete,
+    cancelDelete,
+    confirmDeleteClass,
+  } = useDeleteClass(mutateClasses);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState<ClassFormData>({
@@ -32,7 +64,6 @@ export default function ClassesPage() {
     end_date: "",
   });
 
-  // Keep modal course option default synced with courses list
   useEffect(() => {
     if (courses.length > 0 && !formData.course_id) {
       setFormData((prev) => ({
@@ -41,6 +72,13 @@ export default function ClassesPage() {
       }));
     }
   }, [courses, formData.course_id]);
+
+  const statusTabOptions = [
+    { label: "All", value: "", count: pagination.totalItems },
+    { label: "Ongoing", value: "Ongoing", count: statusCounts.ongoing },
+    { label: "Upcoming", value: "Upcoming", count: statusCounts.upcoming },
+    { label: "Completed", value: "Completed", count: statusCounts.completed },
+  ];
 
   const onSubmitModal = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,13 +124,21 @@ export default function ClassesPage() {
         <FilterBar.Search
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Search class name, course, or status..."
+          placeholder="Search class name or course..."
         />
 
         <FilterBar.Group>
+          <FilterBar.Tabs
+            value={statusFilter}
+            onChange={setStatusFilter}
+            options={statusTabOptions}
+          />
+
+          {isFiltered && <FilterBar.Reset onReset={resetFilters} />}
+
           <FilterBar.Counter
-            filteredCount={filteredClasses.length}
-            totalCount={classes.length}
+            filteredCount={pagination.totalItems}
+            totalCount={totalCount}
             entityName="Classes"
           />
         </FilterBar.Group>
@@ -100,20 +146,32 @@ export default function ClassesPage() {
 
       {/* Data Grid */}
       <DataGrid
-        data={filteredClasses}
+        data={classes}
         loading={loading}
         keyExtractor={(item: ClassDetail, index: number) =>
           item.id ?? (item as { class_id?: number }).class_id ?? index
         }
         emptyMessage="No classes found matching your query."
+        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
         renderCard={(item: ClassDetail) => (
           <ClassCard
             item={item}
             onManage={handleManage}
-            onDelete={handleDeleteClass}
+            onDelete={initiateDelete}
           />
         )}
       />
+
+      {/* Pagination Component */}
+      {!loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) => setCurrentPage(page, pagination.totalPages)}
+          totalItems={pagination.totalItems}
+          pageSize={pagination.limit}
+        />
+      )}
 
       {/* Creation Modal */}
       <CreateClassModal
@@ -124,6 +182,19 @@ export default function ClassesPage() {
         formData={formData}
         setFormData={setFormData}
         submitting={submitting}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={Boolean(classToDelete)}
+        title="Delete Class"
+        message={`Are you sure you want to delete "${classToDelete?.name || classToDelete?.class_name || "this class"}"? This action cannot be undone.`}
+        confirmLabel="Delete Class"
+        cancelLabel="Cancel"
+        variant="danger"
+        isLoading={deleting}
+        onConfirm={confirmDeleteClass}
+        onClose={cancelDelete}
       />
     </div>
   );

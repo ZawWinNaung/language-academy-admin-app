@@ -16,8 +16,7 @@ export default function ClassCard({
   onManage,
   onDelete,
 }: ClassCardProps) {
-  // Gracefully handle calculated class_status, status, or default fallback
-  const rawStatus = item.class_status || item.status || "Unknown";
+  const rawStatus = item.class_status || "Unknown";
 
   const getStatusBadge = (status: string = "Unknown") => {
     switch (status.toLowerCase()) {

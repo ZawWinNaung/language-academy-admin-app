@@ -24,7 +24,6 @@ export interface ClassDetail {
   teacher_name?: string;
   start_date: string;
   end_date: string;
-  status?: ClassStatus;
   class_status?: ClassStatus;
   active_students?: number;
   students?: ClassEnrolledStudent[];

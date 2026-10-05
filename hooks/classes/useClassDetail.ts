@@ -6,22 +6,31 @@ import {
   fetchClassDetail,
   updateClassDetail,
   updateEnrollmentStatus,
+  bulkEnrollStudents,
 } from "@/services/classService";
+import { fetchCourses } from "@/services/courseService";
 import { ClassDetail, EnrollmentStatus } from "@/types/class";
 import { formatDateForInput } from "@/lib/utils/date";
 
 export function useClassDetail(classId: string | undefined) {
-  const apiEndpoint = classId ? `/api/classes/${classId}` : null;
   const { data, error, isLoading, mutate } = useSWR(
-    apiEndpoint,
-    fetchClassDetail,
+    classId ? ["classDetail", classId] : null,
+    () => fetchClassDetail(classId!),
   );
+
+  const { data: coursesRes, isLoading: coursesLoading } = useSWR(
+    "courses",
+    fetchCourses,
+  );
+
+  const courses = coursesRes?.data ?? [];
 
   const [editableClass, setEditableClass] = useState<ClassDetail | null>(null);
   const [savingClass, setSavingClass] = useState(false);
   const [updatingEnrollmentId, setUpdatingEnrollmentId] = useState<
     number | null
   >(null);
+  const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
     if (data?.data?.class_detail) {
@@ -62,7 +71,6 @@ export function useClassDetail(classId: string | undefined) {
     }
   };
 
-  // Change Student Enrollment Status
   const changeStudentStatus = async (
     enrollmentId: number,
     newStatus: EnrollmentStatus,
@@ -84,15 +92,39 @@ export function useClassDetail(classId: string | undefined) {
     }
   };
 
+  const enrollStudents = async (studentIds: number[]): Promise<boolean> => {
+    if (!classId || studentIds.length === 0) return false;
+
+    setEnrolling(true);
+    try {
+      const result = await bulkEnrollStudents(Number(classId), studentIds);
+      if (result.success) {
+        await mutate();
+        return true;
+      }
+      alert(result.message || "Failed to enroll students.");
+      return false;
+    } catch (err) {
+      console.error("Failed to bulk enroll students:", err);
+      return false;
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
   return {
     classDetail: editableClass,
     setClassDetail: setEditableClass,
     students: data?.data?.class_detail?.students ?? [],
-    loading: isLoading,
+    courses,
+    loading: isLoading || coursesLoading,
     isError: Boolean(error),
     savingClass,
     updatingEnrollmentId,
+    enrolling,
     saveClassMeta,
     changeStudentStatus,
+    enrollStudents,
+    refresh: mutate,
   };
 }

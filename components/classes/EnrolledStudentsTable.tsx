@@ -1,23 +1,36 @@
 "use client";
 
-import React from "react";
-import { FaGraduationCap } from "react-icons/fa";
-import { ClassEnrolledStudent, EnrollmentStatus } from "@/types/class";
+import React, { useState } from "react";
+import { FaGraduationCap, FaUserPlus } from "react-icons/fa";
+import {
+  ClassEnrolledStudent,
+  EnrollmentStatus,
+  ClassStatus,
+} from "@/types/class";
+import { EnrollStudentsModal } from "@/components/classes/EnrollStudentsModal";
 
 interface EnrolledStudentsTableProps {
+  classId: number;
+  classStatus?: ClassStatus;
   students: ClassEnrolledStudent[];
   updatingId: number | null;
   onStatusChange: (
     enrollmentId: number,
     newStatus: EnrollmentStatus,
   ) => Promise<boolean>;
+  onRefresh: () => void;
 }
 
 export function EnrolledStudentsTable({
+  classId,
+  classStatus,
   students,
   updatingId,
   onStatusChange,
+  onRefresh,
 }: EnrolledStudentsTableProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isCompleted = classStatus === "Completed";
   const statusBadgeStyle = (status: EnrollmentStatus) => {
     switch (status) {
       case "Active":
@@ -40,6 +53,18 @@ export function EnrolledStudentsTable({
           <FaGraduationCap className="text-indigo-400" />
           Enrolled Students ({students.length})
         </h2>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          disabled={isCompleted}
+          title={
+            isCompleted
+              ? "Cannot enroll students into a completed class"
+              : undefined
+          }
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-xs text-white font-medium rounded-xl transition-all"
+        >
+          <FaUserPlus className="text-[11px]" /> Enroll Students
+        </button>
       </div>
 
       {students.length === 0 ? (
@@ -105,6 +130,13 @@ export function EnrolledStudentsTable({
           </table>
         </div>
       )}
+
+      <EnrollStudentsModal
+        classId={classId}
+        isOpen={isModalOpen && !isCompleted}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={onRefresh}
+      />
     </div>
   );
 }

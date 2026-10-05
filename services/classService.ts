@@ -5,29 +5,48 @@ import {
   ClassDetail,
   ClassFormData,
 } from "@/types/class";
-import { Course } from "@/types/course";
+
+export interface PaginatedApiResponse<T> extends ApiResponse<T> {
+  pagination?: {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number;
+  };
+}
+
+export interface FetchClassesParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}
 
 export async function fetchClasses(
-  url: string,
-): Promise<ApiResponse<ClassDetail[]>> {
+  params?: FetchClassesParams,
+): Promise<PaginatedApiResponse<ClassDetail[]>> {
+  const searchParams = new URLSearchParams();
+
+  if (params?.page) searchParams.set("page", String(params.page));
+  if (params?.limit) searchParams.set("limit", String(params.limit));
+  if (params?.search) searchParams.set("search", params.search);
+  if (params?.status) searchParams.set("status", params.status);
+
+  const queryString = searchParams.toString();
+  const url = `/api/classes${queryString ? `?${queryString}` : ""}`;
+
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch classes");
   return res.json();
 }
 
-export async function fetchCourses(
-  url: string,
-): Promise<ApiResponse<Course[]>> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch courses");
-  return res.json();
-}
-
-export async function createClass(data: ClassFormData): Promise<ApiResponse> {
+export async function createClass(
+  formData: ClassFormData,
+): Promise<ApiResponse<ClassDetail>> {
   const res = await fetch("/api/classes", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(formData),
   });
   return res.json();
 }
@@ -40,9 +59,9 @@ export async function deleteClass(classId: number): Promise<ApiResponse> {
 }
 
 export async function fetchClassDetail(
-  url: string,
+  classId: string | number,
 ): Promise<ClassDetailResponse> {
-  const res = await fetch(url);
+  const res = await fetch(`/api/classes/${classId}`);
   if (!res.ok) throw new Error("Failed to fetch class detail");
   return res.json();
 }
@@ -67,6 +86,24 @@ export async function updateEnrollmentStatus(
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status, enrollment_status: status }),
+  });
+  return res.json();
+}
+
+export async function fetchAvailableStudents(): Promise<ApiResponse> {
+  const res = await fetch("/api/enrollments/available-students");
+  if (!res.ok) throw new Error("Failed to fetch available students");
+  return res.json();
+}
+
+export async function bulkEnrollStudents(
+  classId: number,
+  studentIds: number[],
+): Promise<ApiResponse> {
+  const res = await fetch("/api/enrollments/bulk", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ class_id: classId, student_ids: studentIds }),
   });
   return res.json();
 }

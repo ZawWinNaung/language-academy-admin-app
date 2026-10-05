@@ -205,3 +205,58 @@ FilterBar.Counter = function FilterBarCounter({
     </span>
   );
 };
+
+interface TabOption {
+  label: string;
+  value: string;
+  count?: number;
+}
+
+interface TabsWidgetProps {
+  value: string;
+  onChange: (value: string) => void;
+  options: TabOption[];
+  className?: string;
+}
+
+FilterBar.Tabs = function FilterBarTabs({
+  value,
+  onChange,
+  options,
+  className = "",
+}: TabsWidgetProps) {
+  return (
+    <div
+      className={`flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800 ${className}`}
+    >
+      {options.map((tab) => {
+        const isActive = value === tab.value;
+        return (
+          <button
+            key={tab.value}
+            type="button"
+            onClick={() => onChange(tab.value)}
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+              isActive
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+            }`}
+          >
+            <span>{tab.label}</span>
+            {tab.count !== undefined && (
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  isActive
+                    ? "bg-indigo-500/50 text-white"
+                    : "bg-slate-800 text-slate-400"
+                }`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+};

@@ -16,11 +16,13 @@ interface EnrollmentRecord {
 interface ActiveEnrollmentCardProps {
   activeEnrollment: EnrollmentRecord | undefined;
   onOpenEnrollModal: () => void;
+  onItemClick: (classId: number) => void;
 }
 
 export default function ActiveEnrollmentCard({
   activeEnrollment,
   onOpenEnrollModal,
+  onItemClick,
 }: ActiveEnrollmentCardProps) {
   return (
     <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md space-y-4">
@@ -42,10 +44,13 @@ export default function ActiveEnrollmentCard({
       </div>
 
       {activeEnrollment ? (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between text-xs">
+        <div
+          className="bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/20 cursor-pointer transition-all duration-200 rounded-xl p-4 flex items-center justify-between text-xs group"
+          onClick={() => onItemClick(activeEnrollment.class_id)}
+        >
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-white text-sm">
+              <span className="font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">
                 {activeEnrollment.class_name}
               </span>
               <span className="text-[10px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md">

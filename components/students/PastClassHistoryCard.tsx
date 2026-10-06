@@ -15,6 +15,7 @@ interface EnrollmentRecord {
 
 interface PastClassHistoryCardProps {
   pastEnrollments: EnrollmentRecord[];
+  onItemClick: (classId: number) => void;
 }
 
 const getEnrollmentStatusBadge = (status: string) => {
@@ -35,6 +36,7 @@ const getEnrollmentStatusBadge = (status: string) => {
 
 export default function PastClassHistoryCard({
   pastEnrollments,
+  onItemClick,
 }: PastClassHistoryCardProps) {
   return (
     <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md space-y-4">
@@ -51,10 +53,11 @@ export default function PastClassHistoryCard({
           {pastEnrollments.map((item) => (
             <div
               key={item.enrollment_id}
-              className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs"
+              className="bg-slate-950/80 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-all duration-200 rounded-xl p-3 flex items-center justify-between text-xs group"
+              onClick={() => onItemClick(item.class_id)}
             >
               <div>
-                <div className="font-semibold text-slate-300">
+                <div className="font-semibold text-slate-300 group-hover:text-white transition-colors">
                   {item.class_name}
                 </div>
                 <div className="text-[11px] text-slate-500">

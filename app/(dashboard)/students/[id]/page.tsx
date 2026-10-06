@@ -9,6 +9,7 @@ import StudentProfileCard from "@/components/students/StudentProfileCard";
 import ActiveEnrollmentCard from "@/components/students/ActiveEnrollmentCard";
 import PastClassHistoryCard from "@/components/students/PastClassHistoryCard";
 import { useStudentDetail } from "@/hooks/useStudentDetail";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function StudentDetailPage({
   params,
@@ -18,7 +19,10 @@ export default function StudentDetailPage({
   const resolvedParams = use(params);
   const studentId = resolvedParams?.id;
 
-  // Data & API Hook
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const backHref = searchParams.get("from") || "/students";
+
   const {
     student,
     setStudent,
@@ -56,6 +60,10 @@ export default function StudentDetailPage({
     }
   };
 
+  const handleClassItemClick = (classId: number) => {
+    router.push(`/classes/${classId}?from=/students/${studentId}`);
+  };
+
   if (loading) {
     return (
       <div className="p-8 text-center text-slate-400">
@@ -76,7 +84,7 @@ export default function StudentDetailPage({
     <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6">
       <div className="flex items-center gap-4">
         <Link
-          href="/students"
+          href={backHref}
           className="p-2.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl transition-all"
         >
           <FaArrowLeft className="text-xs" />
@@ -101,9 +109,13 @@ export default function StudentDetailPage({
           <ActiveEnrollmentCard
             activeEnrollment={activeEnrollment}
             onOpenEnrollModal={() => setIsEnrollModalOpen(true)}
+            onItemClick={(classId) => handleClassItemClick(classId)}
           />
 
-          <PastClassHistoryCard pastEnrollments={pastEnrollments} />
+          <PastClassHistoryCard
+            pastEnrollments={pastEnrollments}
+            onItemClick={(classId) => handleClassItemClick(classId)}
+          />
         </div>
       </div>
 

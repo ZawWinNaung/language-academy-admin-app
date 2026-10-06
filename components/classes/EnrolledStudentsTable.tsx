@@ -20,6 +20,7 @@ interface EnrolledStudentsTableProps {
     newStatus: EnrollmentStatus,
   ) => Promise<boolean>;
   onRefresh: () => void;
+  onItemClick: (student_id: number) => void;
 }
 
 const PAGE_SIZE = 10;
@@ -31,6 +32,7 @@ export function EnrolledStudentsTable({
   updatingId,
   onStatusChange,
   onRefresh,
+  onItemClick,
 }: EnrolledStudentsTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,7 +107,11 @@ export function EnrolledStudentsTable({
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {paginatedStudents.map((st) => (
-                  <tr key={st.enrollment_id} className="hover:bg-slate-800/30">
+                  <tr
+                    key={st.enrollment_id}
+                    className="hover:bg-slate-800/30"
+                    onClick={() => onItemClick(st.student_id)}
+                  >
                     <td className="py-3 px-3 font-medium text-white">
                       {st.name}
                     </td>

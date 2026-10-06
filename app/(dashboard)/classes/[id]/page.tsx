@@ -6,12 +6,17 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useClassDetail } from "@/hooks/classes";
 import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
 import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ClassDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const backHref = searchParams.get("from") || "/classes";
+
   const resolvedParams = use(params);
   const classId = resolvedParams?.id;
 
@@ -49,7 +54,7 @@ export default function ClassDetailPage({
       {/* Top Navigation */}
       <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
         <Link
-          href="/classes"
+          href={backHref}
           className="p-2.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl transition-all"
         >
           <FaArrowLeft className="text-xs" />
@@ -85,6 +90,9 @@ export default function ClassDetailPage({
             updatingId={updatingEnrollmentId}
             onStatusChange={changeStudentStatus}
             onRefresh={refresh}
+            onItemClick={(studentId) =>
+              router.push(`/students/${studentId}?from=/classes/${classId}`)
+            }
           />
         </div>
       </div>

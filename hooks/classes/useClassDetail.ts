@@ -8,7 +8,6 @@ import {
   updateEnrollmentStatus,
   bulkEnrollStudents,
 } from "@/services/classService";
-import { fetchCourses } from "@/services/courseService";
 import { ClassDetail, EnrollmentStatus } from "@/types/class";
 import { formatDateForInput } from "@/lib/utils/date";
 
@@ -17,13 +16,6 @@ export function useClassDetail(classId: string | undefined) {
     classId ? ["classDetail", classId] : null,
     () => fetchClassDetail(classId!),
   );
-
-  const { data: coursesRes, isLoading: coursesLoading } = useSWR(
-    "courses",
-    fetchCourses,
-  );
-
-  const courses = coursesRes?.data ?? [];
 
   const [editableClass, setEditableClass] = useState<ClassDetail | null>(null);
   const [savingClass, setSavingClass] = useState(false);
@@ -61,10 +53,12 @@ export function useClassDetail(classId: string | undefined) {
         await mutate();
         return true;
       }
+      // Displays backend validation messages such as archived course alerts
       alert(result.message || "Failed to update class info.");
       return false;
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to save class detail:", err);
+      alert(err?.message || "An unexpected error occurred while saving.");
       return false;
     } finally {
       setSavingClass(false);
@@ -116,8 +110,7 @@ export function useClassDetail(classId: string | undefined) {
     classDetail: editableClass,
     setClassDetail: setEditableClass,
     students: data?.data?.class_detail?.students ?? [],
-    courses,
-    loading: isLoading || coursesLoading,
+    loading: isLoading,
     isError: Boolean(error),
     savingClass,
     updatingEnrollmentId,

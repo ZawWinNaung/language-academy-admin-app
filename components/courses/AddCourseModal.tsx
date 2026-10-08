@@ -1,21 +1,13 @@
 "use client";
 
+import { CourseFormData } from "@/types/course";
+
 interface AddCourseModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
-  formData: {
-    code: string;
-    title: string;
-    description: string;
-  };
-  setFormData: React.Dispatch<
-    React.SetStateAction<{
-      code: string;
-      title: string;
-      description: string;
-    }>
-  >;
+  formData: CourseFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CourseFormData>>;
   submitting: boolean;
 }
 

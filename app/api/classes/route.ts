@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { calculateClassStatus } from "@/lib/utils/classStatus";
-import { ResultSetHeader } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 export async function GET(req: NextRequest) {
   try {
@@ -93,6 +93,30 @@ export async function POST(req: NextRequest) {
     if (new Date(start_date) > new Date(end_date)) {
       return NextResponse.json(
         { success: false, message: "Start date cannot be after end date." },
+        { status: 400 },
+      );
+    }
+
+    // Check if selected course is archived
+    const [courseRows] = await pool.query<RowDataPacket[]>(
+      `SELECT id, is_archived FROM courses WHERE id = ?`,
+      [Number(course_id)],
+    );
+
+    if (courseRows.length === 0) {
+      return NextResponse.json(
+        { success: false, message: "Selected course does not exist." },
+        { status: 400 },
+      );
+    }
+
+    if (courseRows[0].is_archived) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Cannot create class. The selected course has been archived.",
+        },
         { status: 400 },
       );
     }

@@ -146,7 +146,6 @@ export default function ClassesPage() {
           item.id ?? (item as { class_id?: number }).class_id ?? index
         }
         emptyMessage="No classes found matching your query."
-        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
         renderCard={(item: ClassDetail) => (
           <ClassCard
             item={item}

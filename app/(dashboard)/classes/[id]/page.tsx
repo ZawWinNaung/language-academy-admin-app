@@ -1,12 +1,11 @@
 "use client";
 
 import React, { use } from "react";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
 import { useClassDetail } from "@/hooks/classes";
 import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
 import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
 import { useRouter, useSearchParams } from "next/navigation";
+import DetailFrame from "@/components/ui/DetailFrame";
 
 export default function ClassDetailPage({
   params,
@@ -50,28 +49,18 @@ export default function ClassDetailPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-4 sm:p-6">
-      {/* Top Navigation */}
-      <div className="flex items-center gap-4 pb-4 border-b border-border-main">
-        <Link
-          href={backHref}
-          className="p-2.5 bg-surface border border-border-main hover:border-brand-primary/40 text-text-muted hover:text-brand-primary rounded-xl transition-all"
-        >
-          <FaArrowLeft className="text-xs" />
-        </Link>
-        <div>
-          <h1 className="text-xl font-bold text-text-main flex items-center gap-2">
-            {classDetail.name}
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-primary-light text-brand-primary border border-brand-primary/20">
-              {classDetail.class_status}
-            </span>
-          </h1>
-          <p className="text-xs text-text-muted mt-0.5">
-            Course: {classDetail.course_title} ({classDetail.course_code})
-          </p>
-        </div>
-      </div>
-
+    <DetailFrame
+      backHref={backHref}
+      title={
+        <>
+          {classDetail.name}
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-primary-light text-brand-primary border border-brand-primary/20">
+            {classDetail.class_status}
+          </span>
+        </>
+      }
+      description={`Course: ${classDetail.course_title} (${classDetail.course_code})`}
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-1">
           <ClassDetailCard
@@ -96,6 +85,6 @@ export default function ClassDetailPage({
           />
         </div>
       </div>
-    </div>
+    </DetailFrame>
   );
 }

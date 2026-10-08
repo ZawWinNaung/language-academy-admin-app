@@ -5,6 +5,7 @@ import TimetableCard, {
 } from "@/components/timetable/TimetableCard";
 import DataGrid from "@/components/ui/DataGrid";
 import { FilterBar } from "@/components/ui/FilterBar";
+import HeaderBar from "@/components/ui/HeaderBar";
 import { useEffect, useState } from "react";
 
 export default function TimetablePage() {
@@ -42,20 +43,14 @@ export default function TimetablePage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border-main">
-        <div>
-          <h1 className="text-2xl font-bold text-text-main tracking-tight">
-            Timetable Schedule
-          </h1>
-          <p className="text-xs text-text-muted mt-1">
-            Manage weekly classroom schedules, instructor allocations, and
-            subject slots.
-          </p>
-        </div>
+      <HeaderBar
+        title="Timetable Schedule"
+        description="Manage weekly classroom schedules, instructor allocations, and subject slots."
+      >
         <button className="inline-flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-brand-primary/20 transition-all border border-brand-primary/30">
           <span className="text-base leading-none">+</span> Add Slot
         </button>
-      </div>
+      </HeaderBar>
 
       <FilterBar>
         <FilterBar.Search

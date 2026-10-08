@@ -25,19 +25,19 @@ export default function DataTable<T>({
   keyExtractor,
 }: DataTableProps<T>) {
   return (
-    <div className="glass-card rounded-2xl border border-slate-800/80 overflow-hidden">
+    <div className="glass-card rounded-2xl border border-border-main bg-surface overflow-hidden shadow-xs">
       {loading ? (
-        <div className="p-12 text-center text-slate-500 text-xs font-mono">
+        <div className="p-12 text-center text-text-dim text-xs font-mono">
           Loading records...
         </div>
       ) : data.length === 0 ? (
-        <div className="p-12 text-center text-slate-400 text-xs">
+        <div className="p-12 text-center text-text-muted text-xs">
           {emptyMessage}
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-900/60 border-b border-slate-800/80 text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+          <table className="w-full text-left text-xs text-text-main">
+            <thead className="bg-surface-hover border-b border-border-main text-[11px] uppercase tracking-wider text-text-muted font-semibold">
               <tr>
                 {columns.map((col, index) => (
                   <th
@@ -49,11 +49,11 @@ export default function DataTable<T>({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-border-main">
               {data.map((item) => (
                 <tr
                   key={keyExtractor(item)}
-                  className="hover:bg-slate-800/40 transition-colors"
+                  className="hover:bg-surface-hover/60 transition-colors"
                 >
                   {columns.map((col, colIndex) => (
                     <td

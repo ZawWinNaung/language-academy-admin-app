@@ -148,35 +148,35 @@ export default function AssignScheduleModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-5 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 className="text-sm font-bold text-white">
+      <div className="glass-card border border-border-main rounded-2xl p-6 w-full max-w-md space-y-5 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-border-main pb-3">
+          <h3 className="text-sm font-bold text-text-main">
             Assign Timetable Schedule
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 text-xs"
+            className="text-text-dim hover:text-text-muted text-xs"
           >
             <FaTimes />
           </button>
         </div>
 
         {loading ? (
-          <p className="text-xs text-slate-400 text-center py-4">
+          <p className="text-xs text-text-muted text-center py-4">
             Loading unassigned timetables...
           </p>
         ) : availableSchedules.length === 0 ? (
           <div className="py-8 text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 text-slate-400">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-surface-hover text-text-dim">
               <FaCalendarTimes className="text-base" />
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-text-muted">
               No unassigned schedules available.
             </p>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-xl font-semibold transition-all"
+              className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-text-main text-xs rounded-xl font-semibold transition-all"
             >
               Close
             </button>
@@ -184,13 +184,13 @@ export default function AssignScheduleModal({
         ) : (
           <div className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-400 font-semibold mb-1.5">
+              <label className="block text-text-muted font-semibold mb-1.5">
                 Select Timetable Slot
               </label>
               <select
                 value={selectedId}
                 onChange={handleSelectChange}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
               >
                 <option value="">-- Choose an unassigned schedule --</option>
                 {availableSchedules.map((item) => (
@@ -204,28 +204,28 @@ export default function AssignScheduleModal({
 
             {/* Selected Schedule Details */}
             {selectedSchedule && (
-              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2">
+              <div className="bg-surface-hover border border-border-main rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">
+                  <span className="font-bold text-text-main text-sm">
                     {selectedSchedule.class_name}
                   </span>
-                  <span className="text-[10px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] text-brand-primary bg-brand-primary-light border border-brand-primary/20 px-2 py-0.5 rounded-md">
                     {selectedSchedule.course_title}
                   </span>
                 </div>
 
-                <div className="text-slate-400 space-y-1 text-xs">
+                <div className="text-text-muted space-y-1 text-xs">
                   <p>
-                    <strong className="text-slate-300">Day:</strong>{" "}
+                    <strong className="text-text-main">Day:</strong>{" "}
                     {selectedSchedule.day_of_week}
                   </p>
                   <p className="flex items-center gap-1">
-                    <FaClock className="text-indigo-400 text-[10px]" />
-                    <strong className="text-slate-300">Time:</strong>{" "}
+                    <FaClock className="text-brand-primary text-[10px]" />
+                    <strong className="text-text-main">Time:</strong>{" "}
                     {selectedSchedule.start_time} - {selectedSchedule.end_time}
                   </p>
                   <p>
-                    <strong className="text-slate-300">Room:</strong>{" "}
+                    <strong className="text-text-main">Room:</strong>{" "}
                     {selectedSchedule.room_number || "N/A"}
                   </p>
                 </div>
@@ -234,10 +234,10 @@ export default function AssignScheduleModal({
 
             {/* Overlap Warning Box */}
             {conflict && (
-              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3 flex items-start gap-2.5 text-rose-300 text-xs">
-                <FaExclamationTriangle className="text-rose-400 text-sm shrink-0 mt-0.5" />
+              <div className="bg-status-danger/10 border border-status-danger/30 rounded-xl p-3 flex items-start gap-2.5 text-status-danger text-xs">
+                <FaExclamationTriangle className="text-status-danger text-sm shrink-0 mt-0.5" />
                 <div>
-                  <strong className="block text-rose-200 font-semibold mb-0.5">
+                  <strong className="block text-status-danger font-semibold mb-0.5">
                     Schedule Conflict Detected
                   </strong>
                   {conflict}
@@ -245,11 +245,11 @@ export default function AssignScheduleModal({
               </div>
             )}
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-2 border-t border-border-main">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-slate-800 text-slate-400 rounded-xl hover:bg-slate-800"
+                className="px-4 py-2 border border-border-main text-text-muted rounded-xl hover:bg-surface-hover"
               >
                 Cancel
               </button>
@@ -257,7 +257,7 @@ export default function AssignScheduleModal({
                 type="button"
                 disabled={!selectedSchedule || Boolean(conflict) || submitting}
                 onClick={handleAssign}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all"
+                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all"
               >
                 {submitting ? "Assigning..." : "Assign Schedule"}
               </button>

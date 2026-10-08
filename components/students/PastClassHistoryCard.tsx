@@ -24,13 +24,13 @@ const getEnrollmentStatusBadge = (status: string) => {
   switch (normalizedStatus) {
     case "promoted":
     case "graduated":
-      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
+      return "bg-status-success/10 text-status-success border-status-success/30";
     case "demoted":
     case "dropped":
     case "failed":
-      return "bg-rose-500/20 text-rose-300 border-rose-500/30";
+      return "bg-status-danger/10 text-status-danger border-status-danger/30";
     default:
-      return "bg-slate-800 text-slate-300 border-slate-700";
+      return "bg-surface-hover text-text-muted border-border-main";
   }
 };
 
@@ -39,13 +39,13 @@ export default function PastClassHistoryCard({
   onItemClick,
 }: PastClassHistoryCardProps) {
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md space-y-4">
-      <h2 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
-        <FaHistory className="text-indigo-400" /> Past Class History
+    <div className="glass-card border border-border-main rounded-2xl p-5 space-y-4">
+      <h2 className="text-sm font-bold text-text-main flex items-center gap-2 border-b border-border-main pb-3">
+        <FaHistory className="text-brand-primary" /> Past Class History
       </h2>
 
       {pastEnrollments.length === 0 ? (
-        <div className="text-center py-6 text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">
+        <div className="text-center py-6 text-xs text-text-dim border border-dashed border-border-main rounded-xl">
           No past enrollments found.
         </div>
       ) : (
@@ -53,14 +53,14 @@ export default function PastClassHistoryCard({
           {pastEnrollments.map((item) => (
             <div
               key={item.enrollment_id}
-              className="bg-slate-950/80 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 cursor-pointer transition-all duration-200 rounded-xl p-3 flex items-center justify-between text-xs group"
+              className="bg-surface-hover border border-border-main hover:border-brand-primary/40 hover:bg-brand-primary-light cursor-pointer transition-all duration-200 rounded-xl p-3 flex items-center justify-between text-xs group"
               onClick={() => onItemClick(item.class_id)}
             >
               <div>
-                <div className="font-semibold text-slate-300 group-hover:text-white transition-colors">
+                <div className="font-semibold text-text-main group-hover:text-brand-primary transition-colors">
                   {item.class_name}
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-[11px] text-text-muted">
                   {item.course_title}
                 </div>
               </div>

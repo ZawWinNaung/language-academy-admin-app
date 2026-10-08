@@ -19,7 +19,7 @@ export default function DataCards<T>({
 }: DataCardsProps<T>) {
   if (loading) {
     return (
-      <div className="glass-card p-12 text-center text-slate-500 text-xs font-mono rounded-2xl border border-slate-800/80">
+      <div className="glass-card p-12 text-center text-text-dim text-xs font-mono rounded-2xl border border-border-main bg-surface shadow-xs">
         Loading records...
       </div>
     );
@@ -27,7 +27,7 @@ export default function DataCards<T>({
 
   if (data.length === 0) {
     return (
-      <div className="glass-card p-12 text-center text-slate-400 text-xs rounded-2xl border border-slate-800/80">
+      <div className="glass-card p-12 text-center text-text-muted text-xs rounded-2xl border border-border-main bg-surface shadow-xs">
         {emptyMessage}
       </div>
     );

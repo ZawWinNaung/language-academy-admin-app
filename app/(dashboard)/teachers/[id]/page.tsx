@@ -133,7 +133,7 @@ export default function TeacherDetailPage({
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400">
+      <div className="p-8 text-center text-text-muted">
         Loading teacher details...
       </div>
     );
@@ -141,7 +141,7 @@ export default function TeacherDetailPage({
 
   if (!teacher) {
     return (
-      <div className="p-8 text-center text-slate-400">Teacher not found.</div>
+      <div className="p-8 text-center text-text-muted">Teacher not found.</div>
     );
   }
 
@@ -151,13 +151,13 @@ export default function TeacherDetailPage({
       <div className="flex items-center gap-4">
         <Link
           href="/teachers"
-          className="p-2.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl transition-all"
+          className="p-2.5 bg-surface border border-border-main hover:border-brand-primary/40 text-text-muted hover:text-brand-primary rounded-xl transition-all"
         >
           <FaArrowLeft className="text-xs" />
         </Link>
         <div>
-          <h1 className="text-xl font-bold text-white">{teacher.name}</h1>
-          <p className="text-xs text-slate-400">
+          <h1 className="text-xl font-bold text-text-main">{teacher.name}</h1>
+          <p className="text-xs text-text-muted">
             Faculty Profile & Timetable Assignments
           </p>
         </div>
@@ -165,9 +165,9 @@ export default function TeacherDetailPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Edit Teacher Profile */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md">
-          <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-slate-800 pb-3">
-            <FaUserGraduate className="text-indigo-400" /> Edit Profile Details
+        <div className="glass-card border border-border-main rounded-2xl p-5">
+          <h2 className="text-sm font-bold text-text-main mb-4 flex items-center gap-2 border-b border-border-main pb-3">
+            <FaUserGraduate className="text-brand-primary" /> Edit Profile Details
           </h2>
 
           <form
@@ -175,7 +175,7 @@ export default function TeacherDetailPage({
             className="space-y-4 text-xs"
           >
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">
+              <label className="block text-text-muted font-semibold mb-1">
                 Full Name
               </label>
               <input
@@ -184,60 +184,60 @@ export default function TeacherDetailPage({
                 onChange={(e) =>
                   setTeacher({ ...teacher, name: e.target.value })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">
+              <label className="block text-text-muted font-semibold mb-1">
                 Email Address
               </label>
               <div className="relative">
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim" />
                 <input
                   type="email"
                   value={teacher.email}
                   onChange={(e) =>
                     setTeacher({ ...teacher, email: e.target.value })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-surface-hover border border-border-main rounded-xl pl-9 pr-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">
+              <label className="block text-text-muted font-semibold mb-1">
                 Phone Number
               </label>
               <div className="relative">
-                <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim" />
                 <input
                   type="text"
                   value={teacher.phone}
                   onChange={(e) =>
                     setTeacher({ ...teacher, phone: e.target.value })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-surface-hover border border-border-main rounded-xl pl-9 pr-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">
+              <label className="block text-text-muted font-semibold mb-1">
                 Qualification
               </label>
               <div className="relative">
-                <FaAward className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <FaAward className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim" />
                 <input
                   type="text"
                   value={teacher.qualification}
                   onChange={(e) =>
                     setTeacher({ ...teacher, qualification: e.target.value })
                   }
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-surface-hover border border-border-main rounded-xl pl-9 pr-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
                   required
                 />
               </div>
@@ -251,11 +251,11 @@ export default function TeacherDetailPage({
                 onChange={(e) =>
                   setTeacher({ ...teacher, is_active: e.target.checked })
                 }
-                className="rounded border-slate-800 bg-slate-950 text-indigo-600 focus:ring-0 cursor-pointer"
+                className="rounded border-border-main bg-surface-hover text-brand-primary focus:ring-0 cursor-pointer"
               />
               <label
                 htmlFor="is_active"
-                className="text-slate-300 font-medium cursor-pointer"
+                className="text-text-muted font-medium cursor-pointer"
               >
                 Active Faculty Member
               </label>
@@ -264,7 +264,7 @@ export default function TeacherDetailPage({
             <button
               type="submit"
               disabled={savingProfile}
-              className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition-all inline-flex items-center justify-center gap-2"
+              className="w-full mt-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold py-2.5 rounded-xl transition-all inline-flex items-center justify-center gap-2"
             >
               <FaSave /> {savingProfile ? "Saving..." : "Save Profile"}
             </button>
@@ -272,21 +272,21 @@ export default function TeacherDetailPage({
         </div>
 
         {/* Right Column: Assigned Timetables */}
-        <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-md space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <FaCalendarAlt className="text-indigo-400" /> Assigned Schedules
+        <div className="lg:col-span-2 glass-card border border-border-main rounded-2xl p-5 space-y-4">
+          <div className="flex items-center justify-between border-b border-border-main pb-3">
+            <h2 className="text-sm font-bold text-text-main flex items-center gap-2">
+              <FaCalendarAlt className="text-brand-primary" /> Assigned Schedules
             </h2>
             <button
               onClick={() => setIsAssignModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-semibold rounded-xl transition-all"
             >
               <FaPlus className="text-[10px]" /> Assign Schedule
             </button>
           </div>
 
           {schedules.length === 0 ? (
-            <div className="text-center py-12 text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">
+            <div className="text-center py-12 text-xs text-text-dim border border-dashed border-border-main rounded-xl">
               No timetable schedules assigned to this teacher yet.
             </div>
           ) : (
@@ -294,27 +294,27 @@ export default function TeacherDetailPage({
               {schedules.map((item) => (
                 <div
                   key={item.schedule_id}
-                  className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                  className="bg-surface-hover border border-border-main rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white">
+                      <span className="font-bold text-text-main">
                         {item.class_name}
                       </span>
-                      <span className="text-[10px] text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] text-brand-primary bg-brand-primary-light border border-brand-primary/20 px-2 py-0.5 rounded-md">
                         {item.course_title}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 text-slate-400 text-[11px]">
-                      <span className="font-medium text-slate-300">
+                    <div className="flex flex-wrap items-center gap-3 text-text-muted text-[11px]">
+                      <span className="font-medium text-text-main">
                         {item.day_of_week}
                       </span>
                       <span className="flex items-center gap-1">
-                        <FaClock className="text-indigo-400" />{" "}
+                        <FaClock className="text-brand-primary" />{" "}
                         {item.start_time} - {item.end_time}
                       </span>
                       {item.room_number && (
-                        <span className="bg-slate-800/80 px-2 py-0.5 rounded text-slate-300">
+                        <span className="bg-border-subtle px-2 py-0.5 rounded text-text-muted">
                           Room: {item.room_number}
                         </span>
                       )}
@@ -323,7 +323,7 @@ export default function TeacherDetailPage({
 
                   <button
                     onClick={() => promptUnassignSchedule(item.schedule_id)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition-all self-end sm:self-auto text-[11px]"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-status-danger hover:text-status-danger/80 bg-status-danger/10 hover:bg-status-danger/20 border border-status-danger/20 rounded-lg transition-all self-end sm:self-auto text-[11px]"
                   >
                     <FaTimesCircle /> Unassign
                   </button>

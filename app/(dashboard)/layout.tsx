@@ -36,7 +36,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-[#090D16]">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-app-bg">
       <MobileHeader
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -48,7 +48,7 @@ export default function DashboardLayout({
         onOpenLogoutModal={() => setShowConfirmModal(true)}
       />
 
-      <main className="flex-1 overflow-y-auto bg-[#090D16] p-4 sm:p-6 md:p-8">
+      <main className="flex-1 overflow-y-auto bg-app-bg p-4 sm:p-6 md:p-8">
         {children}
       </main>
 

@@ -11,7 +11,7 @@ interface FilterBarProps {
 export function FilterBar({ children, className = "" }: FilterBarProps) {
   return (
     <div
-      className={`bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md shadow-lg ${className}`}
+      className={`bg-surface border border-border-main rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs ${className}`}
     >
       {children}
     </div>
@@ -47,19 +47,19 @@ FilterBar.Search = function FilterBarSearch({
 }: SearchWidgetProps) {
   return (
     <div className={`relative flex-1 ${className}`}>
-      <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none" />
+      <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-dim text-xs pointer-events-none" />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-9 pr-8 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all"
+        className="w-full bg-surface-hover border border-border-main rounded-xl pl-9 pr-8 py-2 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary transition-all"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-text-dim hover:text-text-muted text-xs cursor-pointer"
         >
           <FaTimes />
         </button>
@@ -90,11 +90,11 @@ FilterBar.Select = function FilterBarSelect({
 }: SelectWidgetProps) {
   return (
     <div className="relative flex items-center">
-      <Icon className="absolute left-3 text-slate-500 text-[10px] pointer-events-none" />
+      <Icon className="absolute left-3 text-text-dim text-[10px] pointer-events-none" />
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="bg-slate-950/80 border border-slate-800 text-slate-300 rounded-xl pl-8 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+        className="bg-surface-hover border border-border-main text-text-main rounded-xl pl-8 pr-4 py-2 text-xs focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"
       >
         <option value="">{placeholder}</option>
         {options.map((opt) => (
@@ -133,11 +133,11 @@ FilterBar.MonthPicker = function FilterBarMonthPicker({
   return (
     <div
       onClick={handleContainerClick}
-      className="relative flex items-center bg-slate-950/80 border border-slate-800 hover:border-slate-700 rounded-xl px-3 py-2 cursor-pointer transition-all group min-w-[130px] justify-between"
+      className="relative flex items-center bg-surface-hover border border-border-main hover:border-brand-primary/40 rounded-xl px-3 py-2 cursor-pointer transition-all group min-w-[130px] justify-between"
     >
       <div className="flex items-center gap-2 pointer-events-none">
-        <FaCalendarAlt className="text-slate-500 group-hover:text-indigo-400 text-xs transition-colors shrink-0" />
-        <span className="text-xs text-slate-300 select-none">
+        <FaCalendarAlt className="text-text-dim group-hover:text-brand-primary text-xs transition-colors shrink-0" />
+        <span className="text-xs text-text-main select-none">
           {value
             ? new Date(`${value}-01`).toLocaleDateString("en-US", {
                 month: "short",
@@ -152,7 +152,7 @@ FilterBar.MonthPicker = function FilterBarMonthPicker({
         type="month"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer [color-scheme:dark]"
+        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer [color-scheme:light]"
       />
 
       {value && (
@@ -162,7 +162,7 @@ FilterBar.MonthPicker = function FilterBarMonthPicker({
             e.stopPropagation();
             onChange("");
           }}
-          className="text-slate-500 hover:text-rose-400 text-xs ml-2 z-10"
+          className="text-text-dim hover:text-status-danger text-xs ml-2 z-10 cursor-pointer"
         >
           <FaTimes />
         </button>
@@ -180,7 +180,7 @@ FilterBar.Reset = function FilterBarReset({
     <button
       type="button"
       onClick={onReset}
-      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition-all"
+      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-status-danger hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-all cursor-pointer"
     >
       <FaTimes className="text-[10px]" /> Reset
     </button>
@@ -199,8 +199,8 @@ FilterBar.Counter = function FilterBarCounter({
   entityName,
 }: CounterWidgetProps) {
   return (
-    <span className="text-xs font-mono text-slate-400 bg-slate-800/60 px-3 py-2 rounded-xl border border-slate-700/50 shrink-0">
-      Showing <strong className="text-indigo-400">{filteredCount}</strong> /{" "}
+    <span className="text-xs font-mono text-text-muted bg-surface-hover px-3 py-2 rounded-xl border border-border-main shrink-0">
+      Showing <strong className="text-brand-primary">{filteredCount}</strong> /{" "}
       {totalCount} {entityName ? entityName : ""}
     </span>
   );
@@ -227,7 +227,7 @@ FilterBar.Tabs = function FilterBarTabs({
 }: TabsWidgetProps) {
   return (
     <div
-      className={`flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800 ${className}`}
+      className={`flex items-center gap-1 bg-surface-hover p-1 rounded-xl border border-border-main ${className}`}
     >
       {options.map((tab) => {
         const isActive = value === tab.value;
@@ -236,10 +236,10 @@ FilterBar.Tabs = function FilterBarTabs({
             key={tab.value}
             type="button"
             onClick={() => onChange(tab.value)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
               isActive
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-brand-primary text-white shadow-xs"
+                : "text-text-muted hover:text-text-main hover:bg-surface"
             }`}
           >
             <span>{tab.label}</span>
@@ -247,8 +247,8 @@ FilterBar.Tabs = function FilterBarTabs({
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
                   isActive
-                    ? "bg-indigo-500/50 text-white"
-                    : "bg-slate-800 text-slate-400"
+                    ? "bg-white/20 text-white"
+                    : "bg-surface border border-border-main text-text-muted"
                 }`}
               >
                 {tab.count}

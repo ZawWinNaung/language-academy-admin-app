@@ -13,23 +13,25 @@ export default function MobileHeader({
   onToggleSidebar,
 }: MobileHeaderProps) {
   return (
-    <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-slate-800/80 z-20 shrink-0">
+    <div className="md:hidden flex items-center justify-between px-4 py-3 bg-surface border-b border-border-main z-20 shrink-0">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-md shadow-indigo-500/20">
+        <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center text-white font-black text-sm shadow-xs">
           C
         </div>
         <div>
-          <h2 className="font-bold text-white text-xs tracking-tight leading-none">
+          <h2 className="font-bold text-text-main text-xs tracking-tight leading-none">
             Cambridge
           </h2>
-          <p className="text-[10px] font-mono text-cyan-400">ADMIN PANEL</p>
+          <p className="text-[10px] font-mono text-brand-primary font-semibold">
+            ADMIN PANEL
+          </p>
         </div>
       </div>
 
       <button
         onClick={onToggleSidebar}
         aria-label="Toggle Navigation Menu"
-        className="p-2 rounded-xl text-slate-400 hover:text-white bg-slate-800/50 border border-slate-700/60 focus:outline-none"
+        className="p-2 rounded-xl text-text-muted hover:text-text-main bg-surface-hover border border-border-main focus:outline-none cursor-pointer"
       >
         {isSidebarOpen ? (
           <HiX className="text-xl" />

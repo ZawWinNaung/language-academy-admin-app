@@ -27,18 +27,18 @@ export default function PaymentCard({
   const isPaid = payment.status === "Paid";
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700/80 rounded-2xl p-5 transition-all shadow-md flex flex-col justify-between space-y-4">
+    <div className="glass-card border border-border-main hover:border-brand-primary/40 rounded-2xl p-5 transition-all shadow-md flex flex-col justify-between space-y-4">
       {/* Card Header: Amount & Status */}
-      <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-3">
+      <div className="flex items-start justify-between gap-2 border-b border-border-main pb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-lg">
+          <div className="w-10 h-10 rounded-xl bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary text-lg">
             <MdOutlinePayments />
           </div>
           <div>
-            <span className="text-xl font-bold text-white tracking-tight">
+            <span className="text-xl font-bold text-text-main tracking-tight">
               ${parseFloat(payment.amount).toFixed(2)}
             </span>
-            <p className="text-[10px] font-mono text-cyan-400">
+            <p className="text-[10px] font-mono text-brand-primary">
               MONTH: {payment.payment_month}
             </p>
           </div>
@@ -47,8 +47,8 @@ export default function PaymentCard({
         <span
           className={`px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
             isPaid
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+              ? "bg-status-success/10 text-status-success border-status-success/20"
+              : "bg-status-danger/10 text-status-danger border-status-danger/20"
           }`}
         >
           {payment.status}
@@ -56,24 +56,24 @@ export default function PaymentCard({
       </div>
 
       {/* Card Body: Details */}
-      <div className="space-y-2 text-xs text-slate-300">
+      <div className="space-y-2 text-xs text-text-muted">
         <div className="flex items-center gap-2">
-          <FaUserGraduate className="text-slate-500 shrink-0" />
-          <span className="font-semibold text-slate-200 truncate">
+          <FaUserGraduate className="text-text-dim shrink-0" />
+          <span className="font-semibold text-text-main truncate">
             {payment.student_name || "Unknown Student"}
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-slate-400">
-          <FaReceipt className="text-slate-500 shrink-0" />
+        <div className="flex items-center gap-2 text-text-muted">
+          <FaReceipt className="text-text-dim shrink-0" />
           <span className="truncate">
             Enrollment ID: #{payment.enrollment_id}
             {payment.course_name ? ` (${payment.course_name})` : ""}
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-slate-400">
-          <FaCalendarAlt className="text-slate-500 shrink-0" />
+        <div className="flex items-center gap-2 text-text-muted">
+          <FaCalendarAlt className="text-text-dim shrink-0" />
           <span>
             Paid Date:{" "}
             {payment.paid_date
@@ -85,10 +85,10 @@ export default function PaymentCard({
 
       {/* Card Footer: Actions */}
       {onUpdateStatus && (
-        <div className="pt-2 border-t border-slate-800/80 flex justify-end">
+        <div className="pt-2 border-t border-border-main flex justify-end">
           <button
             onClick={() => onUpdateStatus(payment)}
-            className="text-[11px] font-medium text-slate-400 hover:text-white px-2.5 py-1 rounded-lg hover:bg-slate-800 transition-all"
+            className="text-[11px] font-medium text-text-muted hover:text-text-main px-2.5 py-1 rounded-lg hover:bg-surface-hover transition-all"
           >
             Mark as {isPaid ? "Refunded" : "Paid"}
           </button>

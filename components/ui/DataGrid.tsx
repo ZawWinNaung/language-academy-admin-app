@@ -21,7 +21,7 @@ export default function DataGrid<T>({
 }: DataGridProps<T>) {
   if (loading) {
     return (
-      <div className="glass-card rounded-2xl border border-slate-800/80 p-12 text-center text-slate-500 text-xs font-mono">
+      <div className="glass-card rounded-2xl border border-border-main bg-surface p-12 text-center text-text-dim text-xs font-mono shadow-xs">
         Loading items...
       </div>
     );
@@ -29,7 +29,7 @@ export default function DataGrid<T>({
 
   if (data.length === 0) {
     return (
-      <div className="glass-card rounded-2xl border border-slate-800/80 p-12 text-center text-slate-400 text-xs">
+      <div className="glass-card rounded-2xl border border-border-main bg-surface p-12 text-center text-text-muted text-xs shadow-xs">
         {emptyMessage}
       </div>
     );

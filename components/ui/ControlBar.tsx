@@ -20,21 +20,22 @@ export default function ControlBar({
   entityName = "Items",
 }: ControlBarProps) {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 glass-card p-4 rounded-2xl border border-slate-800/80">
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 glass-card p-4 rounded-2xl border border-border-main bg-surface shadow-xs">
       <div className="relative w-full sm:w-80">
         <input
           type="text"
           placeholder={placeholder}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700/80 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+          className="w-full pl-10 pr-4 py-2.5 bg-surface-hover border border-border-main rounded-xl text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
         />
-        <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none" />
+        <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-dim text-xs pointer-events-none" />
       </div>
-      <div className="text-xs text-slate-400 font-medium">
+      <div className="text-xs text-text-muted font-medium">
         Showing{" "}
-        <span className="text-indigo-400 font-bold">{filteredCount}</span> of{" "}
-        <span className="text-white font-bold">{totalCount}</span> {entityName}
+        <span className="text-brand-primary font-bold">{filteredCount}</span> of{" "}
+        <span className="text-text-main font-bold">{totalCount}</span>{" "}
+        {entityName}
       </div>
     </div>
   );

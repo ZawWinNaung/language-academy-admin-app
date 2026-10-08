@@ -54,23 +54,23 @@ export default function UserProfile({
   };
 
   return (
-    <div className="p-4 border-t border-slate-800/80">
-      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700/80 transition-all">
+    <div className="p-4 border-t border-border-main">
+      <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-hover border border-border-main hover:border-brand-primary/40 transition-all">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-bold text-xs shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-xs shrink-0">
             {getInitials(user?.name)}
           </div>
           <div className="truncate">
-            <p className="text-xs font-semibold text-slate-200 truncate">
+            <p className="text-xs font-semibold text-text-main truncate">
               {loading ? (
-                <span className="inline-block w-20 h-3 bg-slate-800 animate-pulse rounded" />
+                <span className="inline-block w-20 h-3 bg-surface-hover animate-pulse rounded" />
               ) : (
                 user?.name || "Administrator"
               )}
             </p>
-            <p className="text-[10px] text-slate-500 truncate font-mono">
+            <p className="text-[10px] text-text-dim truncate font-mono">
               {loading ? (
-                <span className="inline-block w-24 h-2.5 bg-slate-800 animate-pulse rounded mt-1" />
+                <span className="inline-block w-24 h-2.5 bg-surface-hover animate-pulse rounded mt-1" />
               ) : (
                 user?.email || "admin@academy.edu"
               )}
@@ -83,7 +83,7 @@ export default function UserProfile({
           onClick={onLogoutClick}
           title="Sign Out"
           aria-label="Sign Out"
-          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all shrink-0 ml-1"
+          className="p-1.5 rounded-lg text-text-dim hover:text-status-danger hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all shrink-0 ml-1 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

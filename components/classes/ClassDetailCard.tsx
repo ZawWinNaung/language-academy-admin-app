@@ -74,13 +74,13 @@ export function ClassDetailCard({
   const selectedCourse = courses.find((c) => c.id === formData.course_id);
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl h-auto self-start space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-        <h2 className="text-sm font-semibold text-white">Class Details</h2>
+    <div className="glass-card border border-border-main p-6 rounded-2xl h-auto self-start space-y-4">
+      <div className="flex items-center justify-between border-b border-border-main pb-3">
+        <h2 className="text-sm font-semibold text-text-main">Class Details</h2>
         <button
           type="button"
           onClick={() => setIsEditing(!isEditing)}
-          className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors"
+          className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1 font-medium transition-colors"
         >
           <FaUserEdit /> {isEditing ? "Cancel" : "Edit"}
         </button>
@@ -89,7 +89,7 @@ export function ClassDetailCard({
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         {/* Class Name */}
         <div>
-          <label className="text-slate-400 block mb-1 font-medium">
+          <label className="text-text-muted block mb-1 font-medium">
             Class Name
           </label>
           <input
@@ -97,14 +97,14 @@ export function ClassDetailCard({
             disabled={!isEditing}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary"
             required
           />
         </div>
 
         {/* Course Select */}
         <div>
-          <label className="text-slate-400 block mb-1 font-medium">
+          <label className="text-text-muted block mb-1 font-medium">
             Associated Course
           </label>
           {isEditing ? (
@@ -113,7 +113,7 @@ export function ClassDetailCard({
               onChange={(e) =>
                 setFormData({ ...formData, course_id: Number(e.target.value) })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
               required
             >
               <option value={0} disabled>
@@ -134,7 +134,7 @@ export function ClassDetailCard({
                   ? `${selectedCourse.title} (${selectedCourse.code})`
                   : `${classDetail.course_title || ""} (${classDetail.course_code || ""})`
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60"
             />
           )}
         </div>
@@ -142,7 +142,7 @@ export function ClassDetailCard({
         <div className="grid grid-cols-2 gap-3">
           {/* Start Date Picker */}
           <div>
-            <label className="text-slate-400 block mb-1 font-medium">
+            <label className="text-text-muted block mb-1 font-medium">
               Start Date
             </label>
             <input
@@ -156,14 +156,14 @@ export function ClassDetailCard({
               onChange={(e) =>
                 setFormData({ ...formData, start_date: e.target.value })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary cursor-pointer [scheme:light] [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               required
             />
           </div>
 
           {/* End Date Picker */}
           <div>
-            <label className="text-slate-400 block mb-1 font-medium">
+            <label className="text-text-muted block mb-1 font-medium">
               End Date
             </label>
             <input
@@ -177,7 +177,7 @@ export function ClassDetailCard({
               onChange={(e) =>
                 setFormData({ ...formData, end_date: e.target.value })
               }
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white disabled:opacity-60 focus:outline-none focus:border-indigo-500 cursor-pointer [scheme:dark] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter-[invert(63%)_sepia(80%)_saturate(3000%)_hue-rotate(215deg)_brightness(102%)_contrast(97%)]"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary cursor-pointer [scheme:light] [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               required
             />
           </div>
@@ -187,7 +187,7 @@ export function ClassDetailCard({
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-xl transition-all disabled:opacity-50 mt-2 shadow-md shadow-indigo-600/20"
+            className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-medium py-2 rounded-xl transition-all disabled:opacity-50 mt-2 shadow-md shadow-brand-primary/20"
           >
             {saving ? "Saving Changes..." : "Save Changes"}
           </button>

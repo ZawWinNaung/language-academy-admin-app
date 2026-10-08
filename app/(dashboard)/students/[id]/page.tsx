@@ -66,7 +66,7 @@ export default function StudentDetailPage({
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400">
+      <div className="p-8 text-center text-text-muted">
         Loading student profile...
       </div>
     );
@@ -74,7 +74,7 @@ export default function StudentDetailPage({
 
   if (isError || !student) {
     return (
-      <div className="p-8 text-center text-slate-400">
+      <div className="p-8 text-center text-text-muted">
         Error loading student profile.
       </div>
     );
@@ -85,13 +85,13 @@ export default function StudentDetailPage({
       <div className="flex items-center gap-4">
         <Link
           href={backHref}
-          className="p-2.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl transition-all"
+          className="p-2.5 bg-surface border border-border-main hover:border-brand-primary/40 text-text-muted hover:text-brand-primary rounded-xl transition-all"
         >
           <FaArrowLeft className="text-xs" />
         </Link>
         <div>
-          <h1 className="text-xl font-bold text-white">{student.name}</h1>
-          <p className="text-xs text-slate-400">
+          <h1 className="text-xl font-bold text-text-main">{student.name}</h1>
+          <p className="text-xs text-text-muted">
             Student Profile & Academic History
           </p>
         </div>

@@ -29,46 +29,46 @@ export default function ConfirmModal({
   if (!isOpen) return null;
 
   const variantStyles = {
-    danger: "bg-rose-600 hover:bg-rose-500 text-white",
-    warning: "bg-amber-600 hover:bg-amber-500 text-white",
-    info: "bg-indigo-600 hover:bg-indigo-500 text-white",
+    danger: "bg-status-danger hover:bg-status-danger/90 text-white",
+    warning: "bg-status-warning hover:bg-status-warning/90 text-white",
+    info: "bg-brand-primary hover:bg-brand-primary-hover text-white",
   };
 
   const iconStyles = {
-    danger: "text-rose-400 bg-rose-500/10 border-rose-500/20",
-    warning: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-    info: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+    danger: "text-status-danger bg-status-danger/10 border-status-danger/20",
+    warning: "text-status-warning bg-status-warning/10 border-status-warning/20",
+    info: "text-brand-primary bg-brand-primary-light border-brand-primary/20",
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+      <div className="bg-surface border border-border-main rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-sm animate-in fade-in zoom-in-95 duration-150">
+        <div className="flex items-center justify-between border-b border-border-main pb-3">
           <div className="flex items-center gap-2.5">
             <div
               className={`p-2 rounded-lg border ${iconStyles[variant]} text-xs`}
             >
               <FaExclamationTriangle />
             </div>
-            <h3 className="text-sm font-bold text-white">{title}</h3>
+            <h3 className="text-sm font-bold text-text-main">{title}</h3>
           </div>
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="text-slate-500 hover:text-slate-300 text-xs disabled:opacity-50"
+            className="text-text-dim hover:text-text-muted text-xs disabled:opacity-50 cursor-pointer"
           >
             <FaTimes />
           </button>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed">{message}</p>
+        <p className="text-xs text-text-muted leading-relaxed">{message}</p>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <div className="flex justify-end gap-2 pt-2 border-t border-border-main">
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2 text-xs border border-slate-800 text-slate-400 rounded-xl hover:bg-slate-800 transition-all disabled:opacity-50"
+            className="px-4 py-2 text-xs border border-border-main text-text-muted rounded-xl hover:bg-surface-hover transition-all disabled:opacity-50 cursor-pointer"
           >
             {cancelLabel}
           </button>
@@ -76,7 +76,7 @@ export default function ConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all disabled:opacity-50 ${variantStyles[variant]}`}
+            className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all disabled:opacity-50 cursor-pointer ${variantStyles[variant]}`}
           >
             {isLoading ? "Processing..." : confirmLabel}
           </button>

@@ -51,18 +51,18 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80 text-xs">
-      <div className="text-slate-400">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border-main text-xs">
+      <div className="text-text-muted">
         {totalItems !== undefined ? (
           <span>
-            Showing <strong className="text-slate-200">{startItem}</strong> to{" "}
-            <strong className="text-slate-200">{endItem}</strong> of{" "}
-            <strong className="text-slate-200">{totalItems}</strong> entries
+            Showing <strong className="text-text-main">{startItem}</strong> to{" "}
+            <strong className="text-text-main">{endItem}</strong> of{" "}
+            <strong className="text-text-main">{totalItems}</strong> entries
           </span>
         ) : (
           <span>
-            Page <strong className="text-slate-200">{currentPage}</strong> of{" "}
-            <strong className="text-slate-200">{totalPages}</strong>
+            Page <strong className="text-text-main">{currentPage}</strong> of{" "}
+            <strong className="text-text-main">{totalPages}</strong>
           </span>
         )}
       </div>
@@ -71,7 +71,7 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-2 bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-40 disabled:hover:border-slate-800 text-slate-300 rounded-lg transition-all"
+          className="p-2 bg-surface border border-border-main hover:bg-surface-hover hover:border-brand-primary/40 disabled:opacity-40 disabled:hover:bg-surface disabled:hover:border-border-main text-text-main rounded-lg transition-all cursor-pointer"
           aria-label="Previous page"
         >
           <FaChevronLeft className="text-[10px]" />
@@ -82,16 +82,16 @@ export default function Pagination({
             <button
               key={idx}
               onClick={() => onPageChange(page)}
-              className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                 currentPage === page
-                  ? "bg-indigo-600 border-indigo-500 text-white"
-                  : "bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300"
+                  ? "bg-brand-primary border-brand-primary text-white shadow-xs"
+                  : "bg-surface border-border-main hover:bg-surface-hover hover:border-brand-primary/40 text-text-main"
               }`}
             >
               {page}
             </button>
           ) : (
-            <span key={idx} className="px-2 text-slate-500">
+            <span key={idx} className="px-2 text-text-dim">
               {page}
             </span>
           ),
@@ -100,7 +100,7 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-2 bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-40 disabled:hover:border-slate-800 text-slate-300 rounded-lg transition-all"
+          className="p-2 bg-surface border border-border-main hover:bg-surface-hover hover:border-brand-primary/40 disabled:opacity-40 disabled:hover:bg-surface disabled:hover:border-border-main text-text-main rounded-lg transition-all cursor-pointer"
           aria-label="Next page"
         >
           <FaChevronRight className="text-[10px]" />

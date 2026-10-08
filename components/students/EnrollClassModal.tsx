@@ -45,14 +45,14 @@ export default function EnrollClassModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div className="bg-surface border border-border-main text-text-main rounded-2xl w-full max-w-md p-6 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between border-b border-border-main pb-3">
           <h3 className="text-sm font-bold flex items-center gap-2">
-            <FaGraduationCap className="text-indigo-400" /> Enroll in New Class
+            <FaGraduationCap className="text-brand-primary" /> Enroll in New Class
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg"
+            className="text-text-dim hover:text-text-main p-1 rounded-lg"
           >
             <FaTimes />
           </button>
@@ -60,13 +60,13 @@ export default function EnrollClassModal({
 
         {!hasAvailableClasses ? (
           <div className="space-y-4 py-2 text-xs">
-            <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-300 flex items-start gap-3">
+            <div className="p-4 bg-status-warning/10 border border-status-warning/20 rounded-xl text-status-warning flex items-start gap-3">
               <FaExclamationCircle className="text-base shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-amber-200">
+                <p className="font-semibold text-text-main">
                   No Available Classes Found
                 </p>
-                <p className="text-[11px] text-amber-300/80 mt-1">
+                <p className="text-[11px] text-text-muted mt-1">
                   There are no open or eligible classes available for enrollment
                   right now.
                 </p>
@@ -77,14 +77,14 @@ export default function EnrollClassModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium"
+                className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-text-muted rounded-xl font-medium"
               >
                 Close
               </button>
               <Link
                 href="/classes"
                 onClick={onClose}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold inline-flex items-center gap-1.5"
+                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-xl font-semibold inline-flex items-center gap-1.5"
               >
                 <FaPlus className="text-[10px]" /> Create New Class
               </Link>
@@ -93,7 +93,7 @@ export default function EnrollClassModal({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">
+              <label className="block text-text-muted font-semibold mb-1">
                 Select Target Class
               </label>
               <select
@@ -103,7 +103,7 @@ export default function EnrollClassModal({
                     e.target.value ? Number(e.target.value) : "",
                   )
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
                 required
               >
                 <option value="">-- Select a class --</option>
@@ -119,14 +119,14 @@ export default function EnrollClassModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium"
+                className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-text-muted rounded-xl font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={enrolling || !selectedClassId}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold disabled:opacity-50"
+                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-xl font-semibold disabled:opacity-50"
               >
                 {enrolling ? "Enrolling..." : "Confirm Enrollment"}
               </button>

@@ -68,14 +68,14 @@ export function EnrollStudentsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-2xl p-6 space-y-4 shadow-xl">
-        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <FaUserPlus className="text-indigo-400" /> Enroll Students
+      <div className="glass-card border border-border-main w-full max-w-xl rounded-2xl p-6 space-y-4 shadow-xl">
+        <div className="flex justify-between items-center border-b border-border-main pb-3">
+          <h3 className="text-base font-semibold text-text-main flex items-center gap-2">
+            <FaUserPlus className="text-brand-primary" /> Enroll Students
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-text-dim hover:text-text-main transition-colors"
           >
             <FaTimes />
           </button>
@@ -84,19 +84,19 @@ export function EnrollStudentsModal({
         {/* Search & Select All */}
         <div className="flex gap-2 items-center">
           <div className="relative flex-1">
-            <FaSearch className="absolute left-3 top-3 text-slate-500 text-xs" />
+            <FaSearch className="absolute left-3 top-3 text-text-dim text-xs" />
             <input
               type="text"
               placeholder="Search available students..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full bg-surface-hover border border-border-main rounded-xl pl-9 pr-3 py-2 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary"
             />
           </div>
           <button
             type="button"
             onClick={toggleSelectAll}
-            className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl border border-slate-700 transition-all"
+            className="text-xs bg-surface-hover hover:bg-border-subtle text-text-muted px-3 py-2 rounded-xl border border-border-main transition-all"
           >
             {selectedIds.length === filteredStudents.length &&
             filteredStudents.length > 0
@@ -106,31 +106,31 @@ export function EnrollStudentsModal({
         </div>
 
         {/* List of Available Students */}
-        <div className="max-h-60 overflow-y-auto divide-y divide-slate-800/60 border border-slate-800/80 rounded-xl bg-slate-950/40 p-2">
+        <div className="max-h-60 overflow-y-auto divide-y divide-border-main border border-border-main rounded-xl bg-surface-hover p-2">
           {loading ? (
-            <p className="text-xs text-slate-500 text-center py-6">
+            <p className="text-xs text-text-dim text-center py-6">
               Loading students...
             </p>
           ) : filteredStudents.length === 0 ? (
-            <p className="text-xs text-slate-500 text-center py-6">
+            <p className="text-xs text-text-dim text-center py-6">
               No unassigned students found.
             </p>
           ) : (
             filteredStudents.map((st: any) => (
               <label
                 key={st.id}
-                className="flex items-center justify-between p-2.5 hover:bg-slate-800/40 rounded-lg cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 hover:bg-brand-primary-light rounded-lg cursor-pointer transition-all"
               >
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(st.id)}
                     onChange={() => toggleStudent(st.id)}
-                    className="accent-indigo-500 rounded cursor-pointer"
+                    className="accent-brand-primary rounded cursor-pointer"
                   />
                   <div>
-                    <p className="text-xs font-medium text-white">{st.name}</p>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-xs font-medium text-text-main">{st.name}</p>
+                    <p className="text-[11px] text-text-muted">
                       {st.email} • {st.phone}
                     </p>
                   </div>
@@ -142,15 +142,15 @@ export function EnrollStudentsModal({
 
         {/* Footer Actions */}
         <div className="flex justify-between items-center pt-2">
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-text-muted">
             Selected:{" "}
-            <strong className="text-indigo-400">{selectedIds.length}</strong>
+            <strong className="text-brand-primary">{selectedIds.length}</strong>
           </span>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 rounded-xl transition-all"
+              className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-xs text-text-muted rounded-xl transition-all"
             >
               Cancel
             </button>
@@ -158,7 +158,7 @@ export function EnrollStudentsModal({
               type="button"
               disabled={selectedIds.length === 0 || submitting}
               onClick={handleSubmit}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-xs text-white font-medium rounded-xl transition-all"
+              className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-50 text-xs text-white font-medium rounded-xl transition-all"
             >
               {submitting ? "Enrolling..." : "Enroll Selected"}
             </button>

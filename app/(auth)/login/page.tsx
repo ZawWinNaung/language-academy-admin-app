@@ -37,28 +37,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full glass-card rounded-2xl p-8 shadow-2xl relative z-10 border border-slate-800/80 max-w-md mx-auto">
+    <div className="w-full glass-card rounded-2xl p-8 shadow-xs relative z-10 border border-border-main max-w-md mx-auto bg-surface">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white font-black text-xl shadow-lg shadow-indigo-500/20 mb-4">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-primary text-white font-black text-xl shadow-xs mb-4">
           C
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-text-main">
           Admin Portal
         </h1>
-        <p className="text-xs text-slate-400 mt-1.5 font-medium">
+        <p className="text-xs text-text-muted mt-1.5 font-medium">
           Cambridge Qualifications Academy Management
         </p>
       </div>
 
       {errorMessage && (
-        <div className="mb-6 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs text-center font-medium">
+        <div className="mb-6 p-3 rounded-xl bg-rose-50 border border-rose-200 text-status-danger text-xs text-center font-medium">
           ⚠️ {errorMessage}
         </div>
       )}
 
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
             Email
           </label>
           <div className="relative">
@@ -68,16 +68,16 @@ export default function LoginPage() {
               placeholder="admin@cambridge-academy.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
-            <span className="absolute right-3.5 top-3.5 text-slate-500 text-sm">
+            <span className="absolute right-3.5 top-3.5 text-text-dim text-sm">
               ✉
             </span>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
             Password
           </label>
           <div className="relative">
@@ -87,9 +87,9 @@ export default function LoginPage() {
               placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-4 py-3 text-sm text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
-            <span className="absolute right-3.5 top-3.5 text-slate-500 text-sm">
+            <span className="absolute right-3.5 top-3.5 text-text-dim text-sm">
               🔒
             </span>
           </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isAuthenticating}
-          className="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/25 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
+          className="w-full py-3.5 px-4 bg-brand-primary hover:bg-brand-primary-hover text-white text-sm font-semibold rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all disabled:opacity-50 mt-2 flex items-center justify-center gap-2 cursor-pointer"
         >
           {isAuthenticating ? (
             <>
@@ -111,8 +111,8 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
-        <p className="text-[11px] text-slate-500 font-mono">
+      <div className="mt-8 pt-6 border-t border-border-main text-center">
+        <p className="text-[11px] text-text-dim font-mono">
           Restricted Access • School Staff Only
         </p>
       </div>

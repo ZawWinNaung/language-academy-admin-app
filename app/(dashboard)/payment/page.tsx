@@ -65,12 +65,12 @@ export default function PaymentsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 p-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border-main">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-text-main tracking-tight">
             Payment Management
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-text-muted mt-1">
             Track student tuition fees, transaction records, and refund status.
           </p>
         </div>
@@ -114,13 +114,13 @@ export default function PaymentsPage() {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-44 bg-slate-900/50 border border-slate-800 rounded-2xl animate-pulse"
+              className="h-44 bg-surface-hover border border-border-main rounded-2xl animate-pulse"
             />
           ))}
         </div>
       ) : payments.length === 0 ? (
-        <div className="text-center py-12 bg-slate-900/40 border border-slate-800 rounded-2xl">
-          <p className="text-slate-400 text-sm">
+        <div className="text-center py-12 bg-surface border border-border-main rounded-2xl">
+          <p className="text-text-muted text-sm">
             No payment records found matching your filters.
           </p>
         </div>

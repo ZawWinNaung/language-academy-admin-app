@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import ControlBar from "@/components/ui/ControlBar";
-import DataGrid from "@/components/ui/DataGrid";
-import CourseCard, { Course } from "@/components/courses/CourseCard";
 import AddCourseModal from "@/components/courses/AddCourseModal";
+import CourseCard, { Course } from "@/components/courses/CourseCard";
+import DataGrid from "@/components/ui/DataGrid";
+import { FilterBar } from "@/components/ui/FilterBar";
+import { useEffect, useState } from "react";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -70,34 +70,39 @@ export default function CoursesPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border-main">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-text-main tracking-tight">
             Course Catalog
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-text-muted mt-1">
             Manage academic courses, syllabus details, and course codes.
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-indigo-600/20 transition-all border border-indigo-400/30"
+          className="inline-flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-brand-primary/20 transition-all border border-brand-primary/30"
         >
           <span className="text-base leading-none">+</span> Add New Course
         </button>
       </div>
 
-      {/* Control Bar */}
-      <ControlBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        placeholder="Search by code, title, or description..."
-        filteredCount={filteredCourses.length}
-        totalCount={courses.length}
-        entityName="Courses"
-      />
+      <FilterBar>
+        <FilterBar.Search
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by code, title, or description..."
+        />
 
-      {/* Card Grid View */}
+        <FilterBar.Group>
+          <FilterBar.Counter
+            filteredCount={filteredCourses.length}
+            totalCount={courses.length}
+            entityName="Courses"
+          />
+        </FilterBar.Group>
+      </FilterBar>
+
       <DataGrid
         data={filteredCourses}
         loading={loading}
@@ -112,7 +117,6 @@ export default function CoursesPage() {
         )}
       />
 
-      {/* Extracted Registration Modal */}
       <AddCourseModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

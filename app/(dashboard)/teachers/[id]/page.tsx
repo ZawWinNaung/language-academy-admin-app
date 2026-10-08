@@ -10,12 +10,11 @@ import {
   FaPlus,
   FaTimesCircle,
   FaSave,
-  FaArrowLeft,
   FaCalendarAlt,
 } from "react-icons/fa";
-import Link from "next/link";
 import AssignScheduleModal from "@/components/teachers/AssignScheduleMoal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import DetailFrame from "@/components/ui/DetailFrame";
 
 interface TeacherProfile {
   id: number;
@@ -146,23 +145,11 @@ export default function TeacherDetailPage({
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6">
-      {/* Top Header */}
-      <div className="flex items-center gap-4">
-        <Link
-          href="/teachers"
-          className="p-2.5 bg-surface border border-border-main hover:border-brand-primary/40 text-text-muted hover:text-brand-primary rounded-xl transition-all"
-        >
-          <FaArrowLeft className="text-xs" />
-        </Link>
-        <div>
-          <h1 className="text-xl font-bold text-text-main">{teacher.name}</h1>
-          <p className="text-xs text-text-muted">
-            Faculty Profile & Timetable Assignments
-          </p>
-        </div>
-      </div>
-
+    <DetailFrame
+      backHref="/teachers"
+      title={teacher.name}
+      description="Faculty Profile & Timetable Assignments"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Edit Teacher Profile */}
         <div className="glass-card border border-border-main rounded-2xl p-5">
@@ -367,6 +354,6 @@ export default function TeacherDetailPage({
         onConfirm={handleConfirmSaveProfile}
         onClose={() => setShowSaveConfirmModal(false)}
       />
-    </div>
+    </DetailFrame>
   );
 }

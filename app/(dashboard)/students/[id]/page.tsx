@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, use } from "react";
-import { FaArrowLeft } from "react-icons/fa";
-import Link from "next/link";
 import EnrollClassModal from "@/components/students/EnrollClassModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import StudentProfileCard from "@/components/students/StudentProfileCard";
@@ -10,6 +8,7 @@ import ActiveEnrollmentCard from "@/components/students/ActiveEnrollmentCard";
 import PastClassHistoryCard from "@/components/students/PastClassHistoryCard";
 import { useStudentDetail } from "@/hooks/useStudentDetail";
 import { useSearchParams, useRouter } from "next/navigation";
+import DetailFrame from "@/components/ui/DetailFrame";
 
 export default function StudentDetailPage({
   params,
@@ -81,22 +80,11 @@ export default function StudentDetailPage({
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6">
-      <div className="flex items-center gap-4">
-        <Link
-          href={backHref}
-          className="p-2.5 bg-surface border border-border-main hover:border-brand-primary/40 text-text-muted hover:text-brand-primary rounded-xl transition-all"
-        >
-          <FaArrowLeft className="text-xs" />
-        </Link>
-        <div>
-          <h1 className="text-xl font-bold text-text-main">{student.name}</h1>
-          <p className="text-xs text-text-muted">
-            Student Profile & Academic History
-          </p>
-        </div>
-      </div>
-
+    <DetailFrame
+      backHref={backHref}
+      title={student.name}
+      description="Student Profile & Academic History"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <StudentProfileCard
           student={student}
@@ -138,6 +126,6 @@ export default function StudentDetailPage({
         onConfirm={handleConfirmSaveProfile}
         onClose={() => setShowSaveConfirmModal(false)}
       />
-    </div>
+    </DetailFrame>
   );
 }

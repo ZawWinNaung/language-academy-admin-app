@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PaymentCard, { Payment } from "@/components/payments/PaymentCard";
 import { FilterBar } from "@/components/ui/FilterBar";
+import HeaderBar from "@/components/ui/HeaderBar";
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -63,18 +64,11 @@ export default function PaymentsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border-main">
-        <div>
-          <h1 className="text-2xl font-bold text-text-main tracking-tight">
-            Payment Management
-          </h1>
-          <p className="text-xs text-text-muted mt-1">
-            Track student tuition fees, transaction records, and refund status.
-          </p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <HeaderBar
+        title="Payment Management"
+        description="Track student tuition fees, transaction records, and refund status."
+      />
 
       <FilterBar>
         <FilterBar.Search

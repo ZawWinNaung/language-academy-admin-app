@@ -8,6 +8,7 @@ import CreateClassModal from "@/components/classes/CreateClassModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
+import HeaderBar from "@/components/ui/HeaderBar";
 import { usePagination } from "@/hooks/usePagination";
 import {
   useClassFilters,
@@ -100,17 +101,10 @@ export default function ClassesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-border-main">
-        <div>
-          <h1 className="text-2xl font-bold text-text-main tracking-tight">
-            Class Management
-          </h1>
-          <p className="text-xs text-text-muted mt-1">
-            Track active academic batches, schedules, and calculated class
-            statuses.
-          </p>
-        </div>
+      <HeaderBar
+        title="Class Management"
+        description="Track active academic batches, schedules, and calculated class statuses."
+      >
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
@@ -118,7 +112,7 @@ export default function ClassesPage() {
         >
           <span className="text-base leading-none">+</span> Create New Class
         </button>
-      </div>
+      </HeaderBar>
 
       <FilterBar>
         <FilterBar.Search

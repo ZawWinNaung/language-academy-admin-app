@@ -69,13 +69,25 @@ export async function fetchClassDetail(
 export async function updateClassDetail(
   classId: string | number,
   data: Partial<ClassDetail>,
-): Promise<ApiResponse> {
+): Promise<{ success: boolean; message?: string }> {
   const res = await fetch(`/api/classes/${classId}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  const responseData = await res.json();
+
+  if (!res.ok) {
+    return {
+      success: false,
+      message: responseData.message || "Failed to update class details.",
+    };
+  }
+
+  return responseData;
 }
 
 export async function updateEnrollmentStatus(

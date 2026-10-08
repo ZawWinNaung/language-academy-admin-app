@@ -78,6 +78,44 @@ export async function PUT(
     const body = await req.json();
     const { name, course_id, start_date, end_date } = body;
 
+    if (!name || !course_id || !start_date || !end_date) {
+      return NextResponse.json(
+        { success: false, message: "All fields are required." },
+        { status: 400 },
+      );
+    }
+
+    if (new Date(start_date) > new Date(end_date)) {
+      return NextResponse.json(
+        { success: false, message: "Start date cannot be after end date." },
+        { status: 400 },
+      );
+    }
+
+    // Check if target course is archived
+    const [courseRows] = await pool.query<RowDataPacket[]>(
+      `SELECT id, is_archived FROM courses WHERE id = ?`,
+      [Number(course_id)],
+    );
+
+    if (courseRows.length === 0) {
+      return NextResponse.json(
+        { success: false, message: "Selected course does not exist." },
+        { status: 400 },
+      );
+    }
+
+    if (courseRows[0].is_archived) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Cannot update class. The selected course has been archived.",
+        },
+        { status: 400 },
+      );
+    }
+
     await pool.query(
       `UPDATE classes 
        SET name = ?, course_id = ?, start_date = ?, end_date = ? 

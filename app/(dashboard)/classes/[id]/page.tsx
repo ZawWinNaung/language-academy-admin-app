@@ -2,6 +2,7 @@
 
 import React, { use } from "react";
 import { useClassDetail } from "@/hooks/classes";
+import { useCourses } from "@/hooks/useCourses";
 import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
 import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,7 +23,6 @@ export default function ClassDetailPage({
   const {
     classDetail,
     students,
-    courses,
     loading,
     isError,
     savingClass,
@@ -32,7 +32,13 @@ export default function ClassDetailPage({
     refresh,
   } = useClassDetail(classId);
 
-  if (loading) {
+  const {
+    courses,
+    loading: coursesLoading,
+    isError: coursesError,
+  } = useCourses({});
+
+  if (loading || coursesLoading) {
     return (
       <div className="p-8 text-center text-text-muted">
         Loading class details...
@@ -40,7 +46,7 @@ export default function ClassDetailPage({
     );
   }
 
-  if (isError || !classDetail) {
+  if (isError || coursesError || !classDetail) {
     return (
       <div className="p-8 text-center text-text-muted">
         Class not found or failed to load.

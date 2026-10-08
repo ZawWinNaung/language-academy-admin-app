@@ -121,7 +121,8 @@ export function ClassDetailCard({
               </option>
               {courses.map((course) => (
                 <option key={course.id} value={course.id}>
-                  {course.title} ({course.code})
+                  {course.title} ({course.code}){" "}
+                  {course.is_archived ? "- [Archived]" : ""}
                 </option>
               ))}
             </select>
@@ -131,7 +132,7 @@ export function ClassDetailCard({
               disabled
               value={
                 selectedCourse
-                  ? `${selectedCourse.title} (${selectedCourse.code})`
+                  ? `${selectedCourse.title} (${selectedCourse.code})${selectedCourse.is_archived ? " [Archived]" : ""}`
                   : `${classDetail.course_title || ""} (${classDetail.course_code || ""})`
               }
               className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60"

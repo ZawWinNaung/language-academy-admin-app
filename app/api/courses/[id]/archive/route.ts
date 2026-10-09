@@ -17,9 +17,8 @@ export async function PATCH(
       );
     }
 
-    // Fetch current title
     const [rows] = await pool.query<RowDataPacket[]>(
-      `SELECT title, is_archived FROM courses WHERE id = ?`,
+      `SELECT id FROM courses WHERE id = ?`,
       [courseId],
     );
 
@@ -30,14 +29,9 @@ export async function PATCH(
       );
     }
 
-    let title: string = rows[0].title;
-    if (!title.endsWith("(archived)")) {
-      title = `${title} (archived)`;
-    }
-
     const [result] = await pool.query<ResultSetHeader>(
-      `UPDATE courses SET is_archived = TRUE, title = ? WHERE id = ?`,
-      [title, courseId],
+      `UPDATE courses SET is_archived = TRUE WHERE id = ?`,
+      [courseId],
     );
 
     if (result.affectedRows === 0) {
@@ -51,7 +45,7 @@ export async function PATCH(
       {
         success: true,
         message: "Course archived successfully.",
-        data: { id: courseId, title, is_archived: true },
+        data: { id: courseId, is_archived: true },
       },
       { status: 200 },
     );

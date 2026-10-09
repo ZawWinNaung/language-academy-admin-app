@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Course } from "@/types/course";
 import { ClassFormData } from "@/types/class";
+import CourseCombobox from "./CourseComboBox";
 
 interface CreateClassModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  courses: Course[];
   formData: ClassFormData;
   setFormData: React.Dispatch<React.SetStateAction<ClassFormData>>;
   submitting: boolean;
@@ -18,7 +17,6 @@ export default function CreateClassModal({
   isOpen,
   onClose,
   onSubmit,
-  courses,
   formData,
   setFormData,
   submitting,
@@ -41,8 +39,8 @@ export default function CreateClassModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-      <div className="glass-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-border-main relative z-10">
-        <div className="px-6 py-4 border-b border-border-main flex justify-between items-center bg-surface-hover">
+      <div className="glass-card rounded-2xl shadow-2xl w-full max-w-md border border-border-main relative z-10">
+        <div className="px-6 py-4 border-b border-border-main flex justify-between items-center bg-surface-hover rounded-t-2xl">
           <h3 className="font-bold text-text-main text-sm">
             Create New Class Batch
           </h3>
@@ -75,30 +73,16 @@ export default function CreateClassModal({
             <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
               Select Course
             </label>
-            <select
-              required
-              value={formData.course_id}
-              onChange={(e) =>
-                setFormData({ ...formData, course_id: e.target.value })
+            <CourseCombobox
+              value={formData.course_id ? Number(formData.course_id) : null}
+              onChange={(courseId) =>
+                setFormData({ ...formData, course_id: String(courseId) })
               }
-              className="w-full bg-surface-hover border border-border-main rounded-xl px-3.5 py-2.5 text-xs text-text-main focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary cursor-pointer"
-            >
-              {courses.length === 0 ? (
-                <option value="" disabled>
-                  No courses available. Please create a course first.
-                </option>
-              ) : (
-                courses.map((course) => (
-                  <option key={course.id} value={course.id}>
-                    [{course.code}] {course.title}
-                  </option>
-                ))
-              )}
-            </select>
+              placeholder="Type or select a course..."
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Start Date Picker */}
             <div>
               <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
                 Start Date
@@ -118,7 +102,6 @@ export default function CreateClassModal({
               />
             </div>
 
-            {/* End Date Picker */}
             <div>
               <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
                 End Date
@@ -149,7 +132,7 @@ export default function CreateClassModal({
             </button>
             <button
               type="submit"
-              disabled={submitting || courses.length === 0}
+              disabled={submitting || !formData.course_id}
               className="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-xl hover:bg-brand-primary-hover shadow-lg shadow-brand-primary/20 disabled:opacity-50 transition-all"
             >
               {submitting ? "Saving..." : "Create Class"}

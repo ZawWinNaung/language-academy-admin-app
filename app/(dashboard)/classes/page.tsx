@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
 import ClassCard from "@/components/classes/ClassCard";
@@ -22,6 +22,7 @@ export default function ClassesPage() {
   const router = useRouter();
   const pageSize = 20;
   const { currentPage, setCurrentPage, resetPage } = usePagination(1);
+
   const {
     searchQuery,
     setSearchQuery,
@@ -35,7 +36,6 @@ export default function ClassesPage() {
 
   const {
     classes,
-    courses,
     pagination,
     totalCount,
     statusCounts,
@@ -65,15 +65,6 @@ export default function ClassesPage() {
     end_date: "",
   });
 
-  useEffect(() => {
-    if (courses.length > 0 && !formData.course_id) {
-      setFormData((prev) => ({
-        ...prev,
-        course_id: String(courses[0].id),
-      }));
-    }
-  }, [courses, formData.course_id]);
-
   const statusTabOptions = [
     { label: "All", value: "", count: pagination.totalItems },
     { label: "Ongoing", value: "Ongoing", count: statusCounts.ongoing },
@@ -83,12 +74,17 @@ export default function ClassesPage() {
 
   const onSubmitModal = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData.course_id) {
+      alert("Please select a course.");
+      return;
+    }
+
     const success = await handleCreateClass(formData);
     if (success) {
       setIsModalOpen(false);
       setFormData({
         name: "",
-        course_id: courses.length > 0 ? String(courses[0].id) : "",
+        course_id: "",
         start_date: "",
         end_date: "",
       });
@@ -138,7 +134,6 @@ export default function ClassesPage() {
         </FilterBar.Group>
       </FilterBar>
 
-      {/* Data Grid */}
       <DataGrid
         data={classes}
         loading={loading}
@@ -155,7 +150,6 @@ export default function ClassesPage() {
         )}
       />
 
-      {/* Pagination Component */}
       {!loading && (
         <Pagination
           currentPage={currentPage}
@@ -166,12 +160,11 @@ export default function ClassesPage() {
         />
       )}
 
-      {/* Creation Modal */}
+      {/* Creation Modal using isolated CourseCombobox */}
       <CreateClassModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={onSubmitModal}
-        courses={courses}
         formData={formData}
         setFormData={setFormData}
         submitting={submitting}
@@ -181,7 +174,9 @@ export default function ClassesPage() {
       <ConfirmModal
         isOpen={Boolean(classToDelete)}
         title="Delete Class"
-        message={`Are you sure you want to delete "${classToDelete?.name || classToDelete?.class_name || "this class"}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete "${
+          classToDelete?.name || classToDelete?.class_name || "this class"
+        }"? This action cannot be undone.`}
         confirmLabel="Delete Class"
         cancelLabel="Cancel"
         variant="danger"

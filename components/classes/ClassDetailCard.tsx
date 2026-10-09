@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaUserEdit } from "react-icons/fa";
 import { ClassDetail } from "@/types/class";
 import { Course } from "@/types/course";
+import CourseCombobox from "./CourseComboBox";
 
 interface ClassDetailCardProps {
   classDetail: ClassDetail;
@@ -36,6 +37,17 @@ export function ClassDetailCard({
     return date.toISOString().split("T")[0];
   };
 
+  const resetForm = () => {
+    if (classDetail) {
+      setFormData({
+        name: classDetail.name || classDetail.class_name || "",
+        course_id: classDetail.course_id || 0,
+        start_date: formatDateForInput(classDetail.start_date),
+        end_date: formatDateForInput(classDetail.end_date),
+      });
+    }
+  };
+
   useEffect(() => {
     if (classDetail) {
       setFormData({
@@ -46,6 +58,13 @@ export function ClassDetailCard({
       });
     }
   }, [classDetail]);
+
+  const handleToggleEdit = () => {
+    if (isEditing) {
+      resetForm();
+    }
+    setIsEditing((prev) => !prev);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,15 +90,13 @@ export function ClassDetailCard({
     }
   };
 
-  const selectedCourse = courses.find((c) => c.id === formData.course_id);
-
   return (
     <div className="glass-card border border-border-main p-6 rounded-2xl h-auto self-start space-y-4">
       <div className="flex items-center justify-between border-b border-border-main pb-3">
         <h2 className="text-sm font-semibold text-text-main">Class Details</h2>
         <button
           type="button"
-          onClick={() => setIsEditing(!isEditing)}
+          onClick={handleToggleEdit}
           className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1 font-medium transition-colors"
         >
           <FaUserEdit /> {isEditing ? "Cancel" : "Edit"}
@@ -87,7 +104,6 @@ export function ClassDetailCard({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-        {/* Class Name */}
         <div>
           <label className="text-text-muted block mb-1 font-medium">
             Class Name
@@ -102,46 +118,21 @@ export function ClassDetailCard({
           />
         </div>
 
-        {/* Course Select */}
         <div>
           <label className="text-text-muted block mb-1 font-medium">
             Associated Course
           </label>
-          {isEditing ? (
-            <select
-              value={formData.course_id}
-              onChange={(e) =>
-                setFormData({ ...formData, course_id: Number(e.target.value) })
-              }
-              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
-              required
-            >
-              <option value={0} disabled>
-                Select a course...
-              </option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.title} ({course.code}){" "}
-                  {course.is_archived ? "- [Archived]" : ""}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type="text"
-              disabled
-              value={
-                selectedCourse
-                  ? `${selectedCourse.title} (${selectedCourse.code})${selectedCourse.is_archived ? " [Archived]" : ""}`
-                  : `${classDetail.course_title || ""} (${classDetail.course_code || ""})`
-              }
-              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60"
-            />
-          )}
+          <CourseCombobox
+            disabled={!isEditing}
+            value={formData.course_id ? Number(formData.course_id) : null}
+            onChange={(courseId) =>
+              setFormData({ ...formData, course_id: courseId })
+            }
+            placeholder="Type or select a course..."
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          {/* Start Date Picker */}
           <div>
             <label className="text-text-muted block mb-1 font-medium">
               Start Date
@@ -162,7 +153,6 @@ export function ClassDetailCard({
             />
           </div>
 
-          {/* End Date Picker */}
           <div>
             <label className="text-text-muted block mb-1 font-medium">
               End Date

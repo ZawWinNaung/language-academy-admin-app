@@ -3,7 +3,6 @@
 import { useMemo, useRef } from "react";
 import useSWR from "swr";
 import { fetchClasses } from "@/services/classService";
-import { useCourses } from "@/hooks/useCourses";
 
 interface UseClassesDataOptions {
   currentPage: number;
@@ -40,12 +39,6 @@ export function useClassesData({
     }),
   );
 
-  const {
-    courses,
-    loading: coursesLoading,
-    isError: coursesError,
-  } = useCourses({});
-
   const classes = classesRes?.data ?? [];
   const pagination = classesRes?.pagination ?? {
     page: 1,
@@ -74,12 +67,11 @@ export function useClassesData({
 
   return {
     classes,
-    courses,
     pagination,
     totalCount: grandTotalRef.current || pagination.totalItems,
     statusCounts,
-    loading: classesLoading || coursesLoading,
-    isError: Boolean(classesError || coursesError),
+    loading: classesLoading,
+    isError: Boolean(classesError),
     mutateClasses,
   };
 }

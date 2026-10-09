@@ -1,19 +1,7 @@
 "use client";
 
-import { FaClock, FaDoorOpen, FaUser, FaBook } from "react-icons/fa";
-
-export interface TimetableEntry {
-  id: number;
-  class_id: number;
-  teacher_id: number;
-  day_of_week: string;
-  start_time: string;
-  end_time: string;
-  subject: string;
-  room_no: string;
-  class_name?: string;
-  teacher_name?: string;
-}
+import { FaClock, FaUser, FaBook } from "react-icons/fa";
+import { TimetableEntry } from "@/types/timetable";
 
 interface TimetableCardProps {
   item: TimetableEntry;
@@ -37,20 +25,11 @@ export default function TimetableCard({
 
   return (
     <div className="glass-card rounded-2xl border border-border-main p-5 space-y-4 hover:border-brand-primary/40 transition-all flex flex-col justify-between">
-      {/* Top Header: Day, ID & Room */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[11px] text-brand-primary font-semibold">
-            #{String(item.id).padStart(4, "0")}
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-surface-hover text-text-muted font-mono text-[11px] border border-border-main flex items-center gap-1.5">
-            <FaDoorOpen className="text-text-dim" /> {item.room_no}
-          </span>
-        </div>
-
-        {/* Day & Time */}
         <div className="flex items-center justify-between border-b border-border-main pb-3">
-          <h3 className="font-bold text-text-main text-base">{item.day_of_week}</h3>
+          <h3 className="font-bold text-text-main text-base">
+            {item.day_of_week}
+          </h3>
           <span className="text-[11px] text-brand-primary font-mono flex items-center gap-1 bg-brand-primary-light px-2.5 py-1 rounded-lg border border-brand-primary/20">
             <FaClock /> {formatTime(item.start_time)} -{" "}
             {formatTime(item.end_time)}
@@ -58,7 +37,6 @@ export default function TimetableCard({
         </div>
       </div>
 
-      {/* Body: Subject & Information */}
       <div className="space-y-2.5">
         <div className="flex items-start gap-2.5">
           <FaBook className="text-text-dim text-xs mt-1 shrink-0" />
@@ -88,7 +66,6 @@ export default function TimetableCard({
         </div>
       </div>
 
-      {/* Footer Actions */}
       <div className="pt-3 border-t border-border-main flex items-center justify-end gap-2">
         <button
           onClick={() => onEdit?.(item)}

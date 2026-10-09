@@ -28,17 +28,7 @@ export default function StudentCard({
 }: StudentCardProps) {
   return (
     <div className="glass-card rounded-2xl border border-border-main bg-surface p-5 space-y-4 hover:border-brand-primary/40 transition-all flex flex-col justify-between shadow-xs">
-      {/* Header: ID & Avatar/Name */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[11px] text-brand-primary font-semibold">
-            #{String(student.id).padStart(4, "0")}
-          </span>
-          <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-medium border border-emerald-200">
-            Active
-          </span>
-        </div>
-
         <div className="flex items-center gap-3 border-b border-border-main pb-3">
           <div className="w-10 h-10 rounded-xl bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold shrink-0">
             <FaUserGraduate className="text-sm" />

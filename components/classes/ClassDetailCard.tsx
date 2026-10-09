@@ -91,18 +91,17 @@ export function ClassDetailCard({
   };
 
   return (
-    <div className="glass-card border border-border-main p-6 rounded-2xl h-auto self-start space-y-4">
-      <div className="flex items-center justify-between border-b border-border-main pb-3">
+    <div className="glass-card border border-border-main p-6 rounded-2xl h-auto space-y-5">
+      <div className="flex items-center justify-between border-b border-border-main pb-3.5">
         <h2 className="text-sm font-semibold text-text-main">Class Details</h2>
         <button
           type="button"
           onClick={handleToggleEdit}
-          className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1 font-medium transition-colors"
+          className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1.5 font-medium transition-colors"
         >
           <FaUserEdit /> {isEditing ? "Cancel" : "Edit"}
         </button>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         <div>
           <label className="text-text-muted block mb-1 font-medium">

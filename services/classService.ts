@@ -5,6 +5,7 @@ import {
   ClassDetail,
   ClassFormData,
 } from "@/types/class";
+import { TimetableEntry } from "@/types/timetable";
 
 export interface PaginatedApiResponse<T> extends ApiResponse<T> {
   pagination?: {
@@ -117,5 +118,13 @@ export async function bulkEnrollStudents(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ class_id: classId, student_ids: studentIds }),
   });
+  return res.json();
+}
+
+export async function fetchClassTimetable(
+  classId: string | number,
+): Promise<ApiResponse<TimetableEntry[]>> {
+  const res = await fetch(`/api/classes/${classId}/timetable`);
+  if (!res.ok) throw new Error("Failed to fetch class timetable schedule");
   return res.json();
 }

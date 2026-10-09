@@ -5,6 +5,7 @@ import { useClassDetail } from "@/hooks/classes";
 import { useCourses } from "@/hooks/useCourses";
 import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
 import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
+import { ClassScheduleSection } from "@/components/classes/ClassScheduleSection";
 import { useRouter, useSearchParams } from "next/navigation";
 import DetailFrame from "@/components/ui/DetailFrame";
 
@@ -67,16 +68,20 @@ export default function ClassDetailPage({
       }
       description={`Course: ${classDetail.course_title} (${classDetail.course_code})`}
     >
+      {/* Symmetrical 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div className="lg:col-span-1">
+        {/* Left Column: Metadata & Schedule stacked together */}
+        <div className="lg:col-span-1 space-y-6">
           <ClassDetailCard
             classDetail={classDetail}
             courses={courses}
             saving={savingClass}
             onSave={saveClassMeta}
           />
+          <ClassScheduleSection classId={classId} />
         </div>
 
+        {/* Right Column: Main Enrolled Students Table */}
         <div className="lg:col-span-2">
           <EnrolledStudentsTable
             classId={Number(classId)}

@@ -68,21 +68,19 @@ export default function ClassDetailPage({
       }
       description={`Course: ${classDetail.course_title} (${classDetail.course_code})`}
     >
-      {/* Symmetrical 2-Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Metadata & Schedule stacked together */}
-        <div className="lg:col-span-1 space-y-6">
+      {/* Mobile: Standard natural block height | Desktop: Fixed Viewport Height */}
+      <div className="flex flex-col h-auto lg:h-[calc(100vh-180px)] space-y-6">
+        {/* Top Full-Width Class Detail Strip */}
+        <div className="shrink-0">
           <ClassDetailCard
             classDetail={classDetail}
             courses={courses}
             saving={savingClass}
             onSave={saveClassMeta}
           />
-          <ClassScheduleSection classId={classId} />
         </div>
 
-        {/* Right Column: Main Enrolled Students Table */}
-        <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:flex-1 lg:min-h-0 items-stretch">
           <EnrolledStudentsTable
             classId={Number(classId)}
             classStatus={classDetail?.class_status}
@@ -93,7 +91,10 @@ export default function ClassDetailPage({
             onItemClick={(studentId) =>
               router.push(`/students/${studentId}?from=/classes/${classId}`)
             }
+            onRemoveStudent={() => {}}
           />
+
+          <ClassScheduleSection classId={classId} />
         </div>
       </div>
     </DetailFrame>

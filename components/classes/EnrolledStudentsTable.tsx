@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaGraduationCap, FaUserPlus } from "react-icons/fa";
+import { FaGraduationCap, FaUserPlus, FaTrashAlt } from "react-icons/fa";
 import {
   ClassEnrolledStudent,
   EnrollmentStatus,
@@ -19,6 +19,7 @@ interface EnrolledStudentsTableProps {
     enrollmentId: number,
     newStatus: EnrollmentStatus,
   ) => Promise<boolean>;
+  onRemoveStudent?: (enrollmentId: number) => void;
   onRefresh: () => void;
   onItemClick: (student_id: number) => void;
 }
@@ -31,6 +32,7 @@ export function EnrolledStudentsTable({
   students,
   updatingId,
   onStatusChange,
+  onRemoveStudent,
   onRefresh,
   onItemClick,
 }: EnrolledStudentsTableProps) {
@@ -52,121 +54,115 @@ export function EnrolledStudentsTable({
     currentPage * PAGE_SIZE,
   );
 
-  const statusBadgeStyle = (status: EnrollmentStatus) => {
-    switch (status) {
-      case "Active":
-        return "bg-status-success/10 text-status-success border-status-success/20";
-      case "Promoted":
-        return "bg-brand-primary-light text-brand-primary border-brand-primary/20";
-      case "Dropped":
-        return "bg-status-danger/10 text-status-danger border-status-danger/20";
-      case "Completed":
-        return "bg-brand-primary-light text-brand-primary border-brand-primary/20";
-      default:
-        return "bg-surface-hover text-text-muted border-border-main";
-    }
-  };
-
   return (
-    <div className="glass-card border border-border-main p-6 rounded-2xl h-auto self-start space-y-4 overflow-hidden">
-      <div className="flex items-center justify-between border-b border-border-main pb-3">
-        <h2 className="text-sm font-semibold text-text-main flex items-center gap-2">
-          <FaGraduationCap className="text-brand-primary" />
-          Enrolled Students ({totalItems})
+    <div className="glass-card border border-border-main p-4 sm:p-6 rounded-2xl h-auto lg:h-full flex flex-col justify-between overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-border-main pb-3 shrink-0 gap-2">
+        <h2 className="text-sm font-semibold text-text-main flex items-center gap-2 truncate">
+          <FaGraduationCap className="text-brand-primary shrink-0" />
+          <span>Enrolled Students ({totalItems})</span>
         </h2>
         <button
           onClick={() => setIsModalOpen(true)}
           disabled={isCompleted}
-          title={
-            isCompleted
-              ? "Cannot enroll students into a completed class"
-              : undefined
-          }
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover disabled:bg-surface-hover disabled:text-text-dim disabled:cursor-not-allowed text-xs text-white font-medium rounded-xl transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover disabled:bg-surface-hover disabled:text-text-dim text-xs text-white font-medium rounded-xl transition-all cursor-pointer shrink-0"
         >
-          <FaUserPlus className="text-[11px]" /> Enroll Students
+          <FaUserPlus className="text-[11px]" />
+          <span className="hidden sm:inline">Enroll Students</span>
+          <span className="sm:hidden">Enroll</span>
         </button>
       </div>
 
+      {/* Content Body */}
       {students.length === 0 ? (
-        <p className="text-xs text-text-muted text-center py-8">
+        <div className="py-8 text-center text-xs text-text-muted">
           No students enrolled in this class yet.
-        </p>
+        </div>
       ) : (
-        <>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-text-muted border-collapse">
-              <thead>
-                <tr className="border-b border-border-main text-text-muted font-medium">
-                  <th className="py-2 px-3">Student Name</th>
-                  <th className="py-2 px-3">Email & Phone</th>
-                  <th className="py-2 px-3">Enrolled Date</th>
-                  <th className="py-2 px-3">Status</th>
-                  <th className="py-2 px-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-main">
-                {paginatedStudents.map((st) => (
-                  <tr
-                    key={st.enrollment_id}
-                    className="hover:bg-surface-hover"
-                    onClick={() => onItemClick(st.student_id)}
+        <div className="lg:flex-1 overflow-x-auto lg:overflow-y-auto my-3">
+          <table className="w-full text-left text-xs text-text-muted border-collapse min-w-125">
+            <thead className="sticky top-0 bg-surface z-10">
+              <tr className="border-b border-border-main text-text-muted font-medium">
+                <th className="py-2 px-3 text-center">Name</th>
+                <th className="py-2 px-3 text-center">Contact</th>
+                <th className="py-2 px-3 text-center">Enrolled Date</th>
+                <th className="py-2 px-3 text-center">Status</th>
+                <th className="py-2 px-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-main">
+              {paginatedStudents.map((st) => (
+                <tr
+                  key={st.enrollment_id}
+                  className="hover:bg-surface-hover cursor-pointer"
+                  onClick={() => onItemClick(st.student_id)}
+                >
+                  <td className="py-3 px-3 font-medium text-text-main">
+                    {st.name}
+                  </td>
+                  <td className="py-3 px-3 text-text-muted">
+                    <div>{st.email}</div>
+                    <div className="text-[11px] text-text-dim">{st.phone}</div>
+                  </td>
+                  <td className="py-3 px-3 text-text-muted">
+                    {st.enrolled_date}
+                  </td>
+                  <td
+                    className="py-3 px-3"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <td className="py-3 px-3 font-medium text-text-main">
-                      {st.name}
-                    </td>
-                    <td className="py-3 px-3 text-text-muted">
-                      <div>{st.email}</div>
-                      <div className="text-[11px] text-text-dim">
-                        {st.phone}
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 text-text-muted">
-                      {st.enrolled_date}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span
-                        className={`text-[10px] px-2.5 py-1 rounded-lg border font-medium inline-block ${statusBadgeStyle(
-                          st.enrollment_status,
-                        )}`}
-                      >
-                        {st.enrollment_status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 text-right">
-                      <select
-                        disabled={updatingId === st.enrollment_id}
-                        value={st.enrollment_status}
-                        onChange={(e) =>
-                          onStatusChange(
-                            st.enrollment_id,
-                            e.target.value as EnrollmentStatus,
-                          )
-                        }
-                        className="bg-surface-hover border border-border-main text-xs text-text-main rounded-xl px-2 py-1 focus:outline-none focus:border-brand-primary disabled:opacity-50"
-                      >
-                        <option value="Active">Active</option>
-                        <option value="Promoted">Promoted</option>
-                        <option value="Graduated">Graduated</option>
-                        <option value="Demoted">Demoted</option>
-                        <option value="Dropped">Dropped</option>
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            pageSize={PAGE_SIZE}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
-        </>
+                    <select
+                      disabled={updatingId === st.enrollment_id}
+                      value={st.enrollment_status}
+                      onChange={(e) =>
+                        onStatusChange(
+                          st.enrollment_id,
+                          e.target.value as EnrollmentStatus,
+                        )
+                      }
+                      className="bg-surface-hover border border-border-main text-xs text-text-main font-medium rounded-xl px-2.5 py-1 focus:outline-none focus:border-brand-primary disabled:opacity-50 cursor-pointer"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Promoted">Promoted</option>
+                      <option value="Graduated">Graduated</option>
+                      <option value="Demoted">Demoted</option>
+                      <option value="Dropped">Dropped</option>
+                    </select>
+                  </td>
+                  <td
+                    className="py-3 px-3 text-right"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      disabled={updatingId === st.enrollment_id}
+                      onClick={() =>
+                        onRemoveStudent
+                          ? onRemoveStudent(st.enrollment_id)
+                          : onStatusChange(st.enrollment_id, "Dropped")
+                      }
+                      className="inline-flex items-center gap-1 text-xs text-status-danger hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg hover:bg-status-danger/10 transition-colors cursor-pointer disabled:opacity-50"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
+
+      {/* Pagination Footer */}
+      <div className="shrink-0 pt-2 border-t border-border-main">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          pageSize={PAGE_SIZE}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
 
       <EnrollStudentsModal
         classId={classId}

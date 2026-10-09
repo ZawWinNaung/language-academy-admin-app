@@ -1,13 +1,13 @@
 "use client";
 
-import React, { use } from "react";
+import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
+import { ClassScheduleSection } from "@/components/classes/ClassScheduleSection";
+import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
+import DetailFrame from "@/components/ui/DetailFrame";
 import { useClassDetail } from "@/hooks/classes";
 import { useCourses } from "@/hooks/useCourses";
-import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
-import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
-import { ClassScheduleSection } from "@/components/classes/ClassScheduleSection";
 import { useRouter, useSearchParams } from "next/navigation";
-import DetailFrame from "@/components/ui/DetailFrame";
+import { use } from "react";
 
 export default function ClassDetailPage({
   params,
@@ -70,7 +70,6 @@ export default function ClassDetailPage({
     >
       {/* Mobile: Standard natural block height | Desktop: Fixed Viewport Height */}
       <div className="flex flex-col h-auto lg:h-[calc(100vh-180px)] space-y-6">
-        {/* Top Full-Width Class Detail Strip */}
         <div className="shrink-0">
           <ClassDetailCard
             classDetail={classDetail}
@@ -94,7 +93,10 @@ export default function ClassDetailPage({
             onRemoveStudent={() => {}}
           />
 
-          <ClassScheduleSection classId={classId} />
+          <ClassScheduleSection
+            classId={classId}
+            classStatus={classDetail?.class_status}
+          />
         </div>
       </div>
     </DetailFrame>

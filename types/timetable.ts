@@ -21,3 +21,12 @@ export interface TimetableResponse {
     totalPages: number;
   };
 }
+
+export interface AddTimetablePayload {
+  class_id: number;
+  teacher_id: number;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+  subject: string;
+}

@@ -1,14 +1,27 @@
 "use client";
 
+import React, { useState } from "react";
 import ClassTimetableCard from "@/components/classes/ClassTimetableCard";
+import { AddScheduleModal } from "@/components/classes/AddScheduleModal";
 import { useClassTimetable } from "@/hooks/classes";
+import { ClassStatus } from "@/types/class";
 
 interface ClassScheduleSectionProps {
   classId: string | number;
+  classStatus?: ClassStatus;
+  teachers?: { id: number; name: string }[];
 }
 
-export function ClassScheduleSection({ classId }: ClassScheduleSectionProps) {
-  const { schedules, loading, isError } = useClassTimetable(classId);
+export function ClassScheduleSection({
+  classId,
+  classStatus,
+  teachers = [],
+}: ClassScheduleSectionProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { schedules, loading, isError, refreshTimetable } =
+    useClassTimetable(classId);
+
+  const isCompleted = classStatus === "Completed";
 
   return (
     <div className="glass-card border border-border-main p-4 sm:p-6 rounded-2xl h-auto lg:h-full flex flex-col overflow-hidden">
@@ -21,13 +34,20 @@ export function ClassScheduleSection({ classId }: ClassScheduleSectionProps) {
         </div>
         <button
           type="button"
-          onClick={() => console.log("Add slot for class:", classId)}
-          className="bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all shadow-md shadow-brand-primary/20 border border-brand-primary/30 cursor-pointer shrink-0"
+          disabled={isCompleted}
+          title={
+            isCompleted
+              ? "Cannot add schedule slots to a completed class"
+              : undefined
+          }
+          onClick={() => setIsModalOpen(true)}
+          className="bg-brand-primary hover:bg-brand-primary-hover disabled:bg-surface-hover disabled:text-text-dim disabled:border-border-main disabled:shadow-none disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all shadow-md shadow-brand-primary/20 border border-brand-primary/30 cursor-pointer shrink-0"
         >
           + Add Slot
         </button>
       </div>
 
+      {/* Schedule Slot Grid */}
       <div className="lg:flex-1 lg:overflow-y-auto my-3">
         {loading ? (
           <div className="p-8 text-center text-xs text-text-muted">
@@ -49,6 +69,14 @@ export function ClassScheduleSection({ classId }: ClassScheduleSectionProps) {
           </div>
         )}
       </div>
+
+      <AddScheduleModal
+        classId={Number(classId)}
+        isOpen={isModalOpen && !isCompleted}
+        teachers={teachers}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => refreshTimetable?.()}
+      />
     </div>
   );
 }

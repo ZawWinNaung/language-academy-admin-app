@@ -18,7 +18,14 @@ export async function fetchCourses(
 
   const res = await fetch(`/api/courses?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch courses");
-  return res.json();
+  const rawData = await res.json();
+  return {
+    ...rawData,
+    data: (rawData.data || []).map((course: any) => ({
+      ...course,
+      is_archived: Boolean(course.is_archived),
+    })),
+  };
 }
 
 export async function fetchCourseById(

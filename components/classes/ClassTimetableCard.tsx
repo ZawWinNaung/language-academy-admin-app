@@ -6,8 +6,8 @@ import { TimetableEntry } from "@/types/timetable";
 
 interface ClassTimetableCardProps {
   item: TimetableEntry;
-  onEdit?: (item: TimetableEntry) => void;
-  onRemove?: (item: TimetableEntry) => void;
+  onEdit?: () => void;
+  onRemove?: () => void;
 }
 
 export default function ClassTimetableCard({
@@ -28,7 +28,6 @@ export default function ClassTimetableCard({
 
   return (
     <div className="glass-card rounded-2xl border border-border-main p-4 space-y-3.5 hover:border-brand-primary/40 transition-all flex flex-col justify-between">
-      {/* Top Header: Day & Time */}
       <div className="flex items-center justify-between border-b border-border-main pb-2.5">
         <h3 className="font-bold text-text-main text-sm">
           {item.day_of_week || "N/A"}
@@ -39,7 +38,6 @@ export default function ClassTimetableCard({
         </span>
       </div>
 
-      {/* Body: Subject & Instructor Only */}
       <div className="space-y-2 text-xs">
         {/* Subject */}
         <div className="flex items-start gap-2.5">
@@ -54,12 +52,11 @@ export default function ClassTimetableCard({
           </div>
         </div>
 
-        {/* Instructor */}
         <div className="flex items-start gap-2.5">
           <FaUser className="text-text-dim text-xs mt-0.5 shrink-0" />
           <div className="min-w-0">
             <span className="text-[10px] uppercase font-semibold text-text-dim block tracking-wider">
-              Instructor
+              Teacher
             </span>
             <span className="text-xs text-text-main font-medium truncate block">
               {item.teacher_name ||
@@ -75,14 +72,14 @@ export default function ClassTimetableCard({
       <div className="pt-2 border-t border-border-main flex items-center justify-end gap-2">
         <button
           type="button"
-          onClick={() => onEdit?.(item)}
+          onClick={onEdit}
           className="text-xs text-brand-primary hover:text-brand-primary-hover font-medium px-2.5 py-1 rounded-lg hover:bg-brand-primary-light transition-colors cursor-pointer"
         >
           Edit
         </button>
         <button
           type="button"
-          onClick={() => onRemove?.(item)}
+          onClick={onRemove}
           className="text-xs text-status-danger hover:text-status-danger/80 font-medium px-2.5 py-1 rounded-lg hover:bg-status-danger/10 transition-colors cursor-pointer"
         >
           Remove

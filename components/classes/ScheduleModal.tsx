@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaTimes,
   FaClock,
@@ -10,31 +8,25 @@ import {
 } from "react-icons/fa";
 import TeacherCombobox from "@/components/classes/TeacherComboBox";
 import { useClassTimetable } from "@/hooks/classes";
+import { TimetableEntry, DAYS_OF_WEEK } from "@/types/timetable";
 
-interface AddScheduleModalProps {
+interface ScheduleModalProps {
   classId: number;
   isOpen: boolean;
+  initialData?: TimetableEntry | null; // Pass existing slot data to edit
   onClose: () => void;
   onSuccess: () => void;
 }
 
-const DAYS_OF_WEEK = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-export function AddScheduleModal({
+export function ScheduleModal({
   classId,
   isOpen,
+  initialData,
   onClose,
   onSuccess,
-}: AddScheduleModalProps) {
-  const { addSlot, addingSlot } = useClassTimetable(classId);
+}: ScheduleModalProps) {
+  const { addSlot, updateSlot, savingSlot } = useClassTimetable(classId);
+  const isEditing = Boolean(initialData);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -44,6 +36,27 @@ export function AddScheduleModal({
     start_time: "09:00",
     end_time: "10:30",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        day_of_week: initialData.day_of_week || "Monday",
+        subject: initialData.subject || "",
+        teacher_id: initialData.teacher_id ?? null,
+        start_time: initialData.start_time || "09:00",
+        end_time: initialData.end_time || "10:30",
+      });
+    } else {
+      setFormData({
+        day_of_week: "Monday",
+        subject: "",
+        teacher_id: null,
+        start_time: "09:00",
+        end_time: "10:30",
+      });
+    }
+    setErrorMessage(null);
+  }, [initialData, isOpen]);
 
   if (!isOpen) return null;
 
@@ -69,27 +82,30 @@ export function AddScheduleModal({
       return;
     }
 
-    const res = await addSlot({
-      teacher_id: formData.teacher_id,
-      day_of_week: formData.day_of_week,
-      start_time: formData.start_time,
-      end_time: formData.end_time,
-      subject: formData.subject.trim(),
-    });
+    let res;
+    if (isEditing && initialData) {
+      res = await updateSlot(initialData.id, {
+        teacher_id: formData.teacher_id,
+        day_of_week: formData.day_of_week,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        subject: formData.subject.trim(),
+      });
+    } else {
+      res = await addSlot({
+        teacher_id: formData.teacher_id,
+        day_of_week: formData.day_of_week,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        subject: formData.subject.trim(),
+      });
+    }
 
     if (res.success) {
       onSuccess();
       handleClose();
-      setFormData({
-        day_of_week: "Monday",
-        subject: "",
-        teacher_id: null,
-        start_time: "09:00",
-        end_time: "10:30",
-      });
     } else {
-      // Shows conflict message smoothly in modal UI
-      setErrorMessage(res.message || "Failed to add schedule slot.");
+      setErrorMessage(res.message || "Failed to save schedule slot.");
     }
   };
 
@@ -99,7 +115,8 @@ export function AddScheduleModal({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-border-main pb-3">
           <h2 className="text-sm font-bold text-text-main flex items-center gap-2">
-            <FaClock className="text-brand-primary" /> Add Schedule Slot
+            <FaClock className="text-brand-primary" />
+            {isEditing ? "Edit Schedule Slot" : "Add Schedule Slot"}
           </h2>
           <button
             type="button"
@@ -110,7 +127,7 @@ export function AddScheduleModal({
           </button>
         </div>
 
-        {/* Inline Error Banner */}
+        {/* Inline Error */}
         {errorMessage && (
           <div className="p-3 bg-status-danger/10 border border-status-danger/20 rounded-xl text-status-danger text-xs flex items-start gap-2.5 animate-in fade-in">
             <FaExclamationTriangle className="shrink-0 text-sm mt-0.5" />
@@ -118,9 +135,7 @@ export function AddScheduleModal({
           </div>
         )}
 
-        {/* Form Body */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          {/* Day of Week */}
           <div>
             <label className="text-text-muted block mb-1 font-medium">
               Day of Week
@@ -140,7 +155,6 @@ export function AddScheduleModal({
             </select>
           </div>
 
-          {/* Subject */}
           <div>
             <label className="text-text-muted block mb-1 font-medium flex items-center gap-1.5">
               <FaBook className="text-text-dim text-[11px]" /> Subject
@@ -157,7 +171,6 @@ export function AddScheduleModal({
             />
           </div>
 
-          {/* Assigned Teacher Combobox */}
           <div>
             <label className="text-text-muted block mb-1 font-medium flex items-center gap-1.5">
               <FaUser className="text-text-dim text-[11px]" /> Assigned Teacher
@@ -215,10 +228,16 @@ export function AddScheduleModal({
             </button>
             <button
               type="submit"
-              disabled={addingSlot}
+              disabled={savingSlot}
               className="bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold px-4 py-2 rounded-xl transition-all shadow-md shadow-brand-primary/20 disabled:opacity-50 cursor-pointer"
             >
-              {addingSlot ? "Adding Slot..." : "Add Slot"}
+              {savingSlot
+                ? isEditing
+                  ? "Saving..."
+                  : "Adding Slot..."
+                : isEditing
+                  ? "Save Changes"
+                  : "Add Slot"}
             </button>
           </div>
         </form>

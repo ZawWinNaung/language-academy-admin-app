@@ -1,20 +1,10 @@
-import { ApiResponse } from "@/types/common";
+import { ApiResponse, PaginatedApiResponse } from "@/types/common";
 import {
   ClassDetailResponse,
   EnrollmentStatus,
   ClassDetail,
   ClassFormData,
 } from "@/types/class";
-import { TimetableEntry, AddTimetablePayload } from "@/types/timetable";
-
-export interface PaginatedApiResponse<T> extends ApiResponse<T> {
-  pagination?: {
-    page: number;
-    limit: number;
-    totalItems: number;
-    totalPages: number;
-  };
-}
 
 export interface FetchClassesParams {
   page?: number;
@@ -119,32 +109,4 @@ export async function bulkEnrollStudents(
     body: JSON.stringify({ class_id: classId, student_ids: studentIds }),
   });
   return res.json();
-}
-
-export async function fetchClassTimetable(
-  classId: string | number,
-): Promise<ApiResponse<TimetableEntry[]>> {
-  const res = await fetch(`/api/classes/${classId}/timetable`);
-  if (!res.ok) throw new Error("Failed to fetch class timetable schedule");
-  return res.json();
-}
-
-export async function createClassTimetable(
-  payload: AddTimetablePayload,
-): Promise<ApiResponse<{ id: number }>> {
-  try {
-    const res = await fetch(`/api/classes/${payload.class_id}/timetable`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    return data;
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.message || "Failed to reach server.",
-    };
-  }
 }

@@ -30,3 +30,17 @@ export interface AddTimetablePayload {
   end_time: string;
   subject: string;
 }
+
+export interface UpdateTimetablePayload extends AddTimetablePayload {
+  slot_id: number;
+}
+
+export const DAYS_OF_WEEK = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];

@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { ClassFormData } from "@/types/class";
-import CourseCombobox from "./CourseComboBox";
+import CourseCombobox from "../common/CourseComboBox";
 
 interface CreateClassModalProps {
   isOpen: boolean;

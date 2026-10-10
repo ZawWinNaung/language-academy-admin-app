@@ -12,8 +12,12 @@ const INITIAL_FORM_DATA = {
 };
 
 export function useStudents() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+
+  // Include pagination query parameters in the SWR key
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/students",
+    `/api/students?page=${currentPage}&limit=${pageSize}`,
     fetchStudentsList,
   );
 
@@ -22,6 +26,12 @@ export function useStudents() {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   const students = data?.data ?? [];
+  const pagination = data?.pagination ?? {
+    currentPage: 1,
+    pageSize: 20,
+    totalItems: 0,
+    totalPages: 1,
+  };
 
   const filteredStudents = students.filter(
     (s) =>
@@ -52,6 +62,9 @@ export function useStudents() {
   return {
     students,
     filteredStudents,
+    pagination,
+    currentPage,
+    setCurrentPage,
     searchQuery,
     setSearchQuery,
     loading: isLoading,

@@ -63,8 +63,8 @@ export async function GET(req: NextRequest) {
       success: true,
       data: paginatedClasses,
       pagination: {
-        page,
-        limit,
+        currentPage: page,
+        pageSize: limit,
         totalItems,
         totalPages,
       },

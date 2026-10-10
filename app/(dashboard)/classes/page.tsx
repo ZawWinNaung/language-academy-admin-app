@@ -156,7 +156,7 @@ export default function ClassesPage() {
           totalPages={pagination.totalPages}
           onPageChange={(page) => setCurrentPage(page, pagination.totalPages)}
           totalItems={pagination.totalItems}
-          pageSize={pagination.limit}
+          pageSize={pagination.pageSize}
         />
       )}
 

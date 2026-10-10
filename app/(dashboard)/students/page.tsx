@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
 import StudentCard from "@/components/students/StudentCard";
 import AddStudentModal from "@/components/students/AddStudentModal";
+import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
 import { useStudents } from "@/hooks/useStudents";
@@ -15,6 +16,9 @@ export default function StudentsPage() {
   const {
     students,
     filteredStudents,
+    pagination,
+    currentPage,
+    setCurrentPage,
     searchQuery,
     setSearchQuery,
     loading,
@@ -58,7 +62,7 @@ export default function StudentsPage() {
         <FilterBar.Group>
           <FilterBar.Counter
             filteredCount={filteredStudents.length}
-            totalCount={students.length}
+            totalCount={pagination.totalItems}
             entityName="Students"
           />
         </FilterBar.Group>
@@ -77,6 +81,16 @@ export default function StudentsPage() {
           />
         )}
       />
+
+      {!loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+          totalItems={pagination.totalItems}
+          pageSize={pagination.pageSize}
+        />
+      )}
 
       <AddStudentModal
         isOpen={isModalOpen}

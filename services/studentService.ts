@@ -1,9 +1,9 @@
-import { ApiResponse } from "@/types/common";
+import { ApiResponse, PaginatedApiResponse } from "@/types/common";
 import { StudentProfile, StudentDetailsResponse } from "@/types/student";
 
 export async function fetchStudentsList(
   url: string,
-): Promise<ApiResponse<StudentProfile[]>> {
+): Promise<PaginatedApiResponse<StudentProfile[]>> {
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch students list");
   return res.json();

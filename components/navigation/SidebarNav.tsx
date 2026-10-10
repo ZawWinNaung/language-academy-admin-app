@@ -19,11 +19,6 @@ const navigation = [
   { name: "Teachers", href: "/teachers", icon: <FaChalkboardTeacher /> },
   { name: "Courses", href: "/courses", icon: <FaBookOpen /> },
   { name: "Classes", href: "/classes", icon: <FaSchool /> },
-  {
-    name: "Timetable Schedule",
-    href: "/timetable",
-    icon: <RiCalendarScheduleFill />,
-  },
   { name: "Payment", href: "/payment", icon: <MdPayment /> },
 ];
 

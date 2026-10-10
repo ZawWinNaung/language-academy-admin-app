@@ -1,19 +1,10 @@
-import { ApiResponse } from "@/types/common";
+import { ApiResponse, PaginatedApiResponse } from "@/types/common";
 import {
   ClassDetailResponse,
   EnrollmentStatus,
   ClassDetail,
   ClassFormData,
 } from "@/types/class";
-
-export interface PaginatedApiResponse<T> extends ApiResponse<T> {
-  pagination?: {
-    page: number;
-    limit: number;
-    totalItems: number;
-    totalPages: number;
-  };
-}
 
 export interface FetchClassesParams {
   page?: number;

@@ -91,50 +91,56 @@ export function ClassDetailCard({
   };
 
   return (
-    <div className="glass-card border border-border-main p-6 rounded-2xl h-auto self-start space-y-4">
+    <div className="glass-card border border-border-main p-5 rounded-2xl w-full space-y-4">
       <div className="flex items-center justify-between border-b border-border-main pb-3">
         <h2 className="text-sm font-semibold text-text-main">Class Details</h2>
         <button
           type="button"
           onClick={handleToggleEdit}
-          className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1 font-medium transition-colors"
+          className="text-xs text-brand-primary hover:text-brand-primary-hover flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
         >
-          <FaUserEdit /> {isEditing ? "Cancel" : "Edit"}
+          <FaUserEdit /> {isEditing ? "Cancel" : "Edit Details"}
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-        <div>
-          <label className="text-text-muted block mb-1 font-medium">
-            Class Name
-          </label>
-          <input
-            type="text"
-            disabled={!isEditing}
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="text-text-muted block mb-1 font-medium">
-            Associated Course
-          </label>
-          <CourseCombobox
-            disabled={!isEditing}
-            value={formData.course_id ? Number(formData.course_id) : null}
-            onChange={(courseId) =>
-              setFormData({ ...formData, course_id: courseId })
-            }
-            placeholder="Type or select a course..."
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Responsive Grid: Stacks on mobile, 4 columns across top on Desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          {/* Class Name */}
           <div>
-            <label className="text-text-muted block mb-1 font-medium">
+            <label className="text-text-muted block mb-1 font-semibold uppercase tracking-wider text-[10px]">
+              Class Name
+            </label>
+            <input
+              type="text"
+              disabled={!isEditing}
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary"
+              required
+            />
+          </div>
+
+          {/* Associated Course */}
+          <div>
+            <label className="text-text-muted block mb-1 font-semibold uppercase tracking-wider text-[10px]">
+              Associated Course
+            </label>
+            <CourseCombobox
+              disabled={!isEditing}
+              value={formData.course_id ? Number(formData.course_id) : null}
+              onChange={(courseId) =>
+                setFormData({ ...formData, course_id: courseId })
+              }
+              placeholder="Type or select a course..."
+            />
+          </div>
+
+          {/* Start Date */}
+          <div>
+            <label className="text-text-muted block mb-1 font-semibold uppercase tracking-wider text-[10px]">
               Start Date
             </label>
             <input
@@ -153,8 +159,9 @@ export function ClassDetailCard({
             />
           </div>
 
+          {/* End Date */}
           <div>
-            <label className="text-text-muted block mb-1 font-medium">
+            <label className="text-text-muted block mb-1 font-semibold uppercase tracking-wider text-[10px]">
               End Date
             </label>
             <input
@@ -175,13 +182,15 @@ export function ClassDetailCard({
         </div>
 
         {isEditing && (
-          <button
-            type="submit"
-            disabled={saving}
-            className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-medium py-2 rounded-xl transition-all disabled:opacity-50 mt-2 shadow-md shadow-brand-primary/20"
-          >
-            {saving ? "Saving Changes..." : "Save Changes"}
-          </button>
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              disabled={saving}
+              className="bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-semibold px-5 py-2 rounded-xl transition-all disabled:opacity-50 shadow-md shadow-brand-primary/20 cursor-pointer"
+            >
+              {saving ? "Saving Changes..." : "Save Changes"}
+            </button>
+          </div>
         )}
       </form>
     </div>

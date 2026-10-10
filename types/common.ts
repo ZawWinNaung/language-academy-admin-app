@@ -3,3 +3,12 @@ export interface ApiResponse<T = void> {
   message?: string;
   data?: T;
 }
+
+export interface PaginatedApiResponse<T> extends ApiResponse<T> {
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    pageSize: number;
+  };
+}

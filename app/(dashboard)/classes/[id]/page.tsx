@@ -1,12 +1,13 @@
 "use client";
 
-import React, { use } from "react";
+import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
+import { ClassScheduleSection } from "@/components/classes/ClassScheduleSection";
+import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
+import DetailFrame from "@/components/ui/DetailFrame";
 import { useClassDetail } from "@/hooks/classes";
 import { useCourses } from "@/hooks/useCourses";
-import { ClassDetailCard } from "@/components/classes/ClassDetailCard";
-import { EnrolledStudentsTable } from "@/components/classes/EnrolledStudentsTable";
 import { useRouter, useSearchParams } from "next/navigation";
-import DetailFrame from "@/components/ui/DetailFrame";
+import { use } from "react";
 
 export default function ClassDetailPage({
   params,
@@ -67,8 +68,9 @@ export default function ClassDetailPage({
       }
       description={`Course: ${classDetail.course_title} (${classDetail.course_code})`}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div className="lg:col-span-1">
+      {/* Mobile: Standard natural block height | Desktop: Fixed Viewport Height */}
+      <div className="flex flex-col h-auto lg:h-[calc(100vh-180px)] space-y-6">
+        <div className="shrink-0">
           <ClassDetailCard
             classDetail={classDetail}
             courses={courses}
@@ -77,7 +79,7 @@ export default function ClassDetailPage({
           />
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:flex-1 lg:min-h-0 items-stretch">
           <EnrolledStudentsTable
             classId={Number(classId)}
             classStatus={classDetail?.class_status}
@@ -88,6 +90,12 @@ export default function ClassDetailPage({
             onItemClick={(studentId) =>
               router.push(`/students/${studentId}?from=/classes/${classId}`)
             }
+            onRemoveStudent={() => {}}
+          />
+
+          <ClassScheduleSection
+            classId={classId}
+            classStatus={classDetail?.class_status}
           />
         </div>
       </div>

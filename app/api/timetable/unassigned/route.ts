@@ -10,7 +10,6 @@ export async function GET() {
         ts.day_of_week,
         ts.start_time,
         ts.end_time,
-        ts.room_no,
         COALESCE(c.name, 'Unassigned Class') AS class_name,
         COALESCE(co.title, 'Unassigned Course') AS course_title
        FROM timetable_schedules ts

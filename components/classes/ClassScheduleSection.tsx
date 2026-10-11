@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ClassTimetableCard from "@/components/classes/ClassTimetableCard";
+import ClassTimetableCard from "@/components/common/ClassTimetableCard";
 import { ScheduleModal } from "@/components/classes/ScheduleModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useClassTimetable } from "@/hooks/classes";

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface PaginationProps {
@@ -18,7 +17,7 @@ export default function Pagination({
   totalItems,
   pageSize = 20,
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
+  if (totalPages < 1) return null;
 
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(
@@ -51,7 +50,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border-main text-xs">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <div className="text-text-muted">
         {totalItems !== undefined ? (
           <span>
@@ -70,7 +69,7 @@ export default function Pagination({
       <div className="flex items-center gap-1.5">
         <button
           onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={currentPage <= 1}
           className="p-2 bg-surface border border-border-main hover:bg-surface-hover hover:border-brand-primary/40 disabled:opacity-40 disabled:hover:bg-surface disabled:hover:border-border-main text-text-main rounded-lg transition-all cursor-pointer"
           aria-label="Previous page"
         >
@@ -99,7 +98,7 @@ export default function Pagination({
 
         <button
           onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage >= totalPages}
           className="p-2 bg-surface border border-border-main hover:bg-surface-hover hover:border-brand-primary/40 disabled:opacity-40 disabled:hover:bg-surface disabled:hover:border-border-main text-text-main rounded-lg transition-all cursor-pointer"
           aria-label="Next page"
         >

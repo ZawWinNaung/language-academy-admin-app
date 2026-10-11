@@ -6,7 +6,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import StudentProfileCard from "@/components/students/StudentProfileCard";
 import ActiveEnrollmentCard from "@/components/students/ActiveEnrollmentCard";
 import PastClassHistoryCard from "@/components/students/PastClassHistoryCard";
-import { useStudentDetail } from "@/hooks/useStudentDetail";
+import { useStudentDetail } from "@/hooks/students/useStudentDetail";
 import { useSearchParams, useRouter } from "next/navigation";
 import DetailFrame from "@/components/ui/DetailFrame";
 

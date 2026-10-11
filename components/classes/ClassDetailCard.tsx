@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaUserEdit } from "react-icons/fa";
 import { ClassDetail } from "@/types/class";
 import { Course } from "@/types/course";
-import CourseCombobox from "./CourseComboBox";
+import CourseCombobox from "../common/CourseComboBox";
 
 interface ClassDetailCardProps {
   classDetail: ClassDetail;

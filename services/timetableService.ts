@@ -96,3 +96,22 @@ export async function deleteClassTimetable(
     };
   }
 }
+
+export async function fetchUnassignedSchedules() {
+  const res = await fetch("/api/timetable/unassigned");
+  if (!res.ok) throw new Error("Failed to fetch unassigned timetables");
+  return res.json();
+}
+
+export async function assignTimetableSchedule(
+  scheduleId: number,
+  teacherId: number,
+) {
+  const res = await fetch(`/api/timetable/${scheduleId}/assign`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ teacher_id: teacherId }),
+  });
+  if (!res.ok) throw new Error("Failed to update schedule assignment");
+  return res.json();
+}

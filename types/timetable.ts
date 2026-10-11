@@ -24,7 +24,7 @@ export interface TimetableResponse {
 
 export interface AddTimetablePayload {
   class_id: number;
-  teacher_id: number;
+  teacher_id: number | null;
   day_of_week: string;
   start_time: string;
   end_time: string;
@@ -33,6 +33,15 @@ export interface AddTimetablePayload {
 
 export interface UpdateTimetablePayload extends AddTimetablePayload {
   slot_id: number;
+}
+
+export interface TimetableOption {
+  id: number;
+  class_name: string;
+  course_title: string;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
 }
 
 export const DAYS_OF_WEEK = [

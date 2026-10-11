@@ -7,7 +7,7 @@ import {
   FaSearch,
   FaSpinner,
 } from "react-icons/fa";
-import { useTeacherInfinite } from "@/hooks/useTeachers";
+import { useTeacherInfinite } from "@/hooks/teachers/useTeachers";
 
 interface TeacherComboboxProps {
   value: number | null;

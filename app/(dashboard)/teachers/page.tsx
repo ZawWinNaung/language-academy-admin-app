@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import DataGrid from "@/components/ui/DataGrid";
-import TeacherCard, { Teacher } from "@/components/teachers/TeacherCard";
+import TeacherCard from "@/components/teachers/TeacherCard";
 import AddTeacherModal from "@/components/teachers/AddTeacherModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
-import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
 import { useRouter } from "next/navigation";
+import { Teacher } from "@/types/teacher";
 
 export default function TeachersPage() {
   const router = useRouter();
@@ -158,15 +158,13 @@ export default function TeachersPage() {
             onRemove={(t) => setTeacherToDelete(t)}
           />
         )}
-      />
-
-      {/* Shared Pagination Component */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        pageSize={20}
-        onPageChange={(page) => setCurrentPage(page)}
+        pagination={{
+          currentPage,
+          totalPages,
+          onPageChange: (page) => setCurrentPage(page),
+          totalItems,
+          pageSize: 20,
+        }}
       />
 
       <AddTeacherModal

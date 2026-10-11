@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaChevronDown, FaCheck, FaSpinner } from "react-icons/fa";
-import { useCourses } from "@/hooks/useCourses";
+import { useCourses } from "@/hooks/courses/useCourses";
 import { Course } from "@/types/course";
 
 interface CourseComboboxProps {

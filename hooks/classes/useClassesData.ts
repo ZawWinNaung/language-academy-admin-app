@@ -41,8 +41,8 @@ export function useClassesData({
 
   const classes = classesRes?.data ?? [];
   const pagination = classesRes?.pagination ?? {
-    page: 1,
-    limit: pageSize,
+    currentPage: currentPage,
+    pageSize: pageSize,
     totalItems: 0,
     totalPages: 1,
   };

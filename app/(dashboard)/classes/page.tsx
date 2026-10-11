@@ -6,7 +6,6 @@ import DataGrid from "@/components/ui/DataGrid";
 import ClassCard from "@/components/classes/ClassCard";
 import CreateClassModal from "@/components/classes/CreateClassModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
-import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
 import { usePagination } from "@/hooks/usePagination";
@@ -148,17 +147,14 @@ export default function ClassesPage() {
             onDelete={initiateDelete}
           />
         )}
+        pagination={{
+          currentPage,
+          totalPages: pagination.totalPages,
+          onPageChange: (page) => setCurrentPage(page, pagination.totalPages),
+          totalItems: pagination.totalItems,
+          pageSize: pagination.pageSize,
+        }}
       />
-
-      {!loading && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={(page) => setCurrentPage(page, pagination.totalPages)}
-          totalItems={pagination.totalItems}
-          pageSize={pagination.limit}
-        />
-      )}
 
       {/* Creation Modal using isolated CourseCombobox */}
       <CreateClassModal

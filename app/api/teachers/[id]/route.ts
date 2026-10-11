@@ -17,7 +17,6 @@ export async function GET(
       );
     }
 
-    //Fetch Teacher Info
     const [teacherRows] = await pool.query<RowDataPacket[]>(
       `SELECT id, name, email, phone, qualification, is_active 
        FROM teachers 
@@ -32,32 +31,14 @@ export async function GET(
       );
     }
 
-    const [scheduleRows] = await pool.query<RowDataPacket[]>(
-      `SELECT 
-        ts.id AS schedule_id,
-        ts.class_id,
-        ts.day_of_week,
-        ts.start_time,
-        ts.end_time,
-        ts.room_no,
-        COALESCE(c.name, 'Unassigned Class') AS class_name,
-        COALESCE(co.title, 'Unassigned Course') AS course_title
-       FROM timetable_schedules ts
-       LEFT JOIN classes c ON ts.class_id = c.id
-       LEFT JOIN courses co ON c.course_id = co.id
-       WHERE ts.teacher_id = ?
-       ORDER BY FIELD(ts.day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), ts.start_time ASC`,
-      [teacherId],
-    );
-
     return NextResponse.json({
       success: true,
       data: {
         teacher: teacherRows[0],
-        schedules: scheduleRows || [],
       },
     });
   } catch (error) {
+    console.error("Fetch Teacher Detail Error:", error);
     return NextResponse.json(
       {
         success: false,
@@ -69,7 +50,6 @@ export async function GET(
   }
 }
 
-// UPDATE Teacher Profile
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> | { id: string } },

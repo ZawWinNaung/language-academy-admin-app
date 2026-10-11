@@ -1,22 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaClock,
   FaTimes,
   FaExclamationTriangle,
   FaCalendarTimes,
 } from "react-icons/fa";
-
-interface TimetableOption {
-  id: number;
-  class_name: string;
-  course_title: string;
-  day_of_week: string;
-  start_time: string;
-  end_time: string;
-  room_number: string;
-}
+import { useAssignSchedule } from "@/hooks/teachers/useAssignSchedule";
+import { TimetableOption } from "@/types/timetable";
 
 interface AssignScheduleModalProps {
   isOpen: boolean;
@@ -38,23 +30,27 @@ export default function AssignScheduleModal({
   existingSchedules,
   onAssignSuccess,
 }: AssignScheduleModalProps) {
-  const [availableSchedules, setAvailableSchedules] = useState<
-    TimetableOption[]
-  >([]);
+  const { availableSchedules, loading, submitting, assignSchedule } =
+    useAssignSchedule(isOpen);
+
   const [selectedId, setSelectedId] = useState<string>("");
   const [selectedSchedule, setSelectedSchedule] =
     useState<TimetableOption | null>(null);
   const [conflict, setConflict] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
-  // Convert "HH:MM:SS" or "HH:MM" string to total minutes for comparison
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedId("");
+      setSelectedSchedule(null);
+      setConflict(null);
+    }
+  }, [isOpen]);
+
   const timeToMinutes = (timeStr: string) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  // Check if two time slots overlap: (StartA < EndB) AND (EndA > StartB)
   const checkOverlap = (candidate: TimetableOption) => {
     const candStart = timeToMinutes(candidate.start_time);
     const candEnd = timeToMinutes(candidate.end_time);
@@ -75,34 +71,6 @@ export default function AssignScheduleModal({
     return null;
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      setLoading(true);
-      fetch("/api/timetable/unassigned")
-        .then(async (res) => {
-          if (!res.ok) return { success: false, data: [] };
-          const text = await res.text();
-          return text ? JSON.parse(text) : { success: false, data: [] };
-        })
-        .then((result) => {
-          if (result.success && Array.isArray(result.data)) {
-            setAvailableSchedules(result.data);
-          } else {
-            setAvailableSchedules([]);
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching unassigned schedules:", err);
-          setAvailableSchedules([]);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setSelectedId("");
-      setSelectedSchedule(null);
-      setConflict(null);
-    }
-  }, [isOpen]);
-
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;
     setSelectedId(id);
@@ -121,26 +89,13 @@ export default function AssignScheduleModal({
 
   const handleAssign = async () => {
     if (!selectedId || conflict) return;
-    setSubmitting(true);
 
-    try {
-      const res = await fetch(`/api/timetable/${selectedId}/assign`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teacher_id: teacherId }),
-      });
-
-      const result = await res.json();
-      if (result.success) {
-        onAssignSuccess();
-        onClose();
-      } else {
-        alert(result.message || "Failed to assign schedule.");
-      }
-    } catch (err) {
-      console.error("Error assigning schedule", err);
-    } finally {
-      setSubmitting(false);
+    const result = await assignSchedule(Number(selectedId), teacherId);
+    if (result.success) {
+      onAssignSuccess();
+      onClose();
+    } else {
+      alert(result.message || "Failed to assign schedule.");
     }
   };
 
@@ -155,7 +110,7 @@ export default function AssignScheduleModal({
           </h3>
           <button
             onClick={onClose}
-            className="text-text-dim hover:text-text-muted text-xs"
+            className="text-text-dim hover:text-text-muted text-xs cursor-pointer"
           >
             <FaTimes />
           </button>
@@ -176,7 +131,7 @@ export default function AssignScheduleModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-text-main text-xs rounded-xl font-semibold transition-all"
+              className="px-4 py-2 bg-surface-hover hover:bg-border-subtle text-text-main text-xs rounded-xl font-semibold transition-all cursor-pointer"
             >
               Close
             </button>
@@ -190,7 +145,7 @@ export default function AssignScheduleModal({
               <select
                 value={selectedId}
                 onChange={handleSelectChange}
-                className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary"
+                className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main focus:outline-none focus:border-brand-primary cursor-pointer"
               >
                 <option value="">-- Choose an unassigned schedule --</option>
                 {availableSchedules.map((item) => (
@@ -202,7 +157,6 @@ export default function AssignScheduleModal({
               </select>
             </div>
 
-            {/* Selected Schedule Details */}
             {selectedSchedule && (
               <div className="bg-surface-hover border border-border-main rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
@@ -224,15 +178,10 @@ export default function AssignScheduleModal({
                     <strong className="text-text-main">Time:</strong>{" "}
                     {selectedSchedule.start_time} - {selectedSchedule.end_time}
                   </p>
-                  <p>
-                    <strong className="text-text-main">Room:</strong>{" "}
-                    {selectedSchedule.room_number || "N/A"}
-                  </p>
                 </div>
               </div>
             )}
 
-            {/* Overlap Warning Box */}
             {conflict && (
               <div className="bg-status-danger/10 border border-status-danger/30 rounded-xl p-3 flex items-start gap-2.5 text-status-danger text-xs">
                 <FaExclamationTriangle className="text-status-danger text-sm shrink-0 mt-0.5" />
@@ -249,7 +198,7 @@ export default function AssignScheduleModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-border-main text-text-muted rounded-xl hover:bg-surface-hover"
+                className="px-4 py-2 border border-border-main text-text-muted rounded-xl hover:bg-surface-hover cursor-pointer"
               >
                 Cancel
               </button>
@@ -257,7 +206,7 @@ export default function AssignScheduleModal({
                 type="button"
                 disabled={!selectedSchedule || Boolean(conflict) || submitting}
                 onClick={handleAssign}
-                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all"
+                className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all cursor-pointer"
               >
                 {submitting ? "Assigning..." : "Assign Schedule"}
               </button>

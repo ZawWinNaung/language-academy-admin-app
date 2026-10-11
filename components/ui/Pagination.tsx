@@ -50,7 +50,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border-main text-xs">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <div className="text-text-muted">
         {totalItems !== undefined ? (
           <span>

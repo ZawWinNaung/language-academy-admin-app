@@ -92,10 +92,14 @@ export async function POST(
     }
 
     const targetClass = currentClassRows[0];
-    const teacherIdParsed = teacher_id ? parseInt(teacher_id, 10) : null;
+
+    // Safely handle optional teacher assignment (handles empty strings, null, undefined)
+    const teacherIdParsed =
+      teacher_id && teacher_id !== "" && teacher_id !== "null"
+        ? parseInt(teacher_id, 10)
+        : null;
 
     // CHECK 1: Same Class Time Overlap Check
-    // Prevents this exact class from having multiple overlapping slots on the same day
     const [sameClassConflicts] = await pool.query<RowDataPacket[]>(
       `SELECT id, subject, start_time, end_time 
        FROM timetable_schedules 
@@ -116,7 +120,7 @@ export async function POST(
       );
     }
 
-    //CHECK 2: Teacher Conflict Check across overlapping class date ranges & time slots
+    // CHECK 2: Teacher Conflict Check (Runs only if a teacher is assigned)
     if (teacherIdParsed) {
       const [teacherConflicts] = await pool.query<RowDataPacket[]>(
         `SELECT 
@@ -132,9 +136,7 @@ export async function POST(
          WHERE t.teacher_id = ?
            AND c.is_deleted = FALSE
            AND t.day_of_week = ?
-           -- Overlapping Class Date Ranges
            AND (c.start_date <= ? AND c.end_date >= ?)
-           -- Overlapping Schedule Time Window
            AND (? < t.end_time AND ? > t.start_time)`,
         [
           teacherIdParsed,

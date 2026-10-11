@@ -48,7 +48,12 @@ export async function PUT(
     }
 
     const targetClass = currentClassRows[0];
-    const teacherIdParsed = teacher_id ? parseInt(teacher_id, 10) : null;
+
+    // Safely handle optional teacher assignment (handles empty strings, null, undefined, or string "null")
+    const teacherIdParsed =
+      teacher_id && teacher_id !== "" && teacher_id !== "null"
+        ? parseInt(teacher_id, 10)
+        : null;
 
     // Same Class Time Overlap Check
     const [sameClassConflicts] = await pool.query<RowDataPacket[]>(
@@ -72,7 +77,7 @@ export async function PUT(
       );
     }
 
-    // Teacher Conflict Check
+    // Teacher Conflict Check (Runs only if a teacher is selected)
     if (teacherIdParsed) {
       const [teacherConflicts] = await pool.query<RowDataPacket[]>(
         `SELECT 

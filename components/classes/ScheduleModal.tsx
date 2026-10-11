@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import {
   FaTimes,
@@ -13,7 +15,7 @@ import { TimetableEntry, DAYS_OF_WEEK } from "@/types/timetable";
 interface ScheduleModalProps {
   classId: number;
   isOpen: boolean;
-  initialData?: TimetableEntry | null; // Pass existing slot data to edit
+  initialData?: TimetableEntry | null;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -73,10 +75,9 @@ export function ScheduleModal({
       setErrorMessage("Please enter a subject.");
       return;
     }
-    if (!formData.teacher_id) {
-      setErrorMessage("Please select an instructor.");
-      return;
-    }
+
+    // Teacher is now optional, so the restriction check has been removed.
+
     if (formData.start_time >= formData.end_time) {
       setErrorMessage("End time must be later than start time.");
       return;
@@ -173,7 +174,8 @@ export function ScheduleModal({
 
           <div>
             <label className="text-text-muted block mb-1 font-medium flex items-center gap-1.5">
-              <FaUser className="text-text-dim text-[11px]" /> Assigned Teacher
+              <FaUser className="text-text-dim text-[11px]" /> Assigned Teacher{" "}
+              <span className="text-text-dim font-normal">(Optional)</span>
             </label>
             <TeacherCombobox
               value={formData.teacher_id}
@@ -181,7 +183,7 @@ export function ScheduleModal({
                 setErrorMessage(null);
                 setFormData({ ...formData, teacher_id: teacherId });
               }}
-              placeholder="Type or select an instructor..."
+              placeholder="Leave unassigned or select an instructor..."
             />
           </div>
 

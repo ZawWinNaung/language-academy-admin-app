@@ -6,8 +6,7 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import DataGrid from "@/components/ui/DataGrid";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
-import Pagination from "@/components/ui/Pagination";
-import { useCourses } from "@/hooks/useCourses";
+import { useCourses } from "@/hooks/courses/useCourses";
 import { Course, CourseFormData } from "@/types/course";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -150,14 +149,13 @@ export default function CoursesPage() {
             onUnarchive={(c) => setSelectedCourseToUnarchive(c)}
           />
         )}
-      />
-
-      <Pagination
-        currentPage={pagination.currentPage}
-        totalPages={pagination.totalPages}
-        totalItems={pagination.totalItems}
-        pageSize={pagination.pageSize}
-        onPageChange={(page) => setCurrentPage(page)}
+        pagination={{
+          currentPage: pagination.currentPage,
+          totalPages: pagination.totalPages,
+          onPageChange: (page) => setCurrentPage(page),
+          totalItems: pagination.totalItems,
+          pageSize: pagination.pageSize,
+        }}
       />
 
       <AddCourseModal

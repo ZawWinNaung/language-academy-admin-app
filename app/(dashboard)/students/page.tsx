@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import DataGrid from "@/components/ui/DataGrid";
 import StudentCard from "@/components/students/StudentCard";
 import AddStudentModal from "@/components/students/AddStudentModal";
-import Pagination from "@/components/ui/Pagination";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/hooks/students/useStudents";
 
 export default function StudentsPage() {
   const router = useRouter();
@@ -80,17 +79,14 @@ export default function StudentsPage() {
             onRemove={(st) => console.log("Remove student:", st)}
           />
         )}
+        pagination={{
+          currentPage: currentPage,
+          totalPages: pagination.totalPages,
+          onPageChange: (page) => setCurrentPage(page),
+          totalItems: pagination.totalItems,
+          pageSize: pagination.pageSize,
+        }}
       />
-
-      {!loading && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-          totalItems={pagination.totalItems}
-          pageSize={pagination.pageSize}
-        />
-      )}
 
       <AddStudentModal
         isOpen={isModalOpen}

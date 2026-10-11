@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import DetailFrame from "@/components/ui/DetailFrame";
 import CourseDetailCard from "@/components/courses/CourseDetailCard";
 import CourseClassesTable from "@/components/courses/CourseClassesTable";
-import { useCourseDetail } from "@/hooks/useCourseDetail";
+import { useCourseDetail } from "@/hooks/courses/useCourseDetail";
 
 export default function CourseDetailPage({
   params,

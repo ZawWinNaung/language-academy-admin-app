@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         s.name AS student_name,
         e.id AS enrollment_id,
         p.id AS payment_id,
-        p.amount,
+        co.tuition_fee AS amount,
         p.paid_date,
         COALESCE(p.status, 'Unpaid') AS status
       FROM classes cl
@@ -101,7 +101,6 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    // Filter completed classes to only return those that actually have unpaid records
     const filteredCompleted = Object.values(completedClassesWithUnpaid).filter(
       (cls: any) => cls.stats.unpaid > 0,
     );

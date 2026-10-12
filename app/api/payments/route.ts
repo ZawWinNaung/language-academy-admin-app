@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { verifyJWT } from "@/lib/auth";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 interface PaymentRow extends RowDataPacket {
@@ -22,18 +21,10 @@ interface CountRow extends RowDataPacket {
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get("admin_session")?.value;
-    if (!token || !(await verifyJWT(token))) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized access" },
-        { status: 401 },
-      );
-    }
-
     const { searchParams } = new URL(request.url);
 
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
-    const limit = Math.max(1, parseInt(searchParams.get("limit") || "10", 10));
+    const limit = Math.max(1, parseInt(searchParams.get("limit") || "20", 10));
     const status = searchParams.get("status");
     const month = searchParams.get("payment_month");
     const enrollmentId = searchParams.get("enrollment_id");
@@ -47,7 +38,7 @@ export async function GET(request: NextRequest) {
       SELECT 
         p.id,
         p.enrollment_id,
-        p.amount,
+        co.tuition_fee AS amount,
         p.payment_month,
         p.paid_date,
         p.status,
@@ -136,18 +127,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const token = request.cookies.get("admin_session")?.value;
-    if (!token || !(await verifyJWT(token))) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 },
-      );
-    }
-
     const body = await request.json();
-    const { enrollment_id, amount, payment_month, paid_date, status } = body;
+    const { enrollment_id, payment_month, paid_date, status } = body;
 
-    if (!enrollment_id || !amount || !payment_month) {
+    if (!enrollment_id || !payment_month) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 },
@@ -155,13 +138,12 @@ export async function POST(request: NextRequest) {
     }
 
     const query = `
-      INSERT INTO payments (enrollment_id, amount, payment_month, paid_date, status)
-      VALUES (?, ?, ?, COALESCE(?, NOW()), COALESCE(?, 'Paid'))
+      INSERT INTO payments (enrollment_id, payment_month, paid_date, status)
+      VALUES (?, ?, COALESCE(?, NOW()), COALESCE(?, 'Paid'))
     `;
 
     const [result] = await pool.query<ResultSetHeader>(query, [
       enrollment_id,
-      amount,
       payment_month,
       paid_date || null,
       status || "Paid",
@@ -198,14 +180,6 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const token = request.cookies.get("admin_session")?.value;
-    if (!token || !(await verifyJWT(token))) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 },
-      );
-    }
-
     const body = await request.json();
     const { id, status } = body;
 

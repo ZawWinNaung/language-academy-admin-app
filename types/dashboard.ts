@@ -43,6 +43,7 @@ export interface UnpaidFeeStudent {
   student_email: string;
   student_phone: string;
   class_id: number;
+  enrollment_id: number;
   class_name: string;
   course_title: string;
   class_status: "Upcoming" | "Ongoing" | "Completed";

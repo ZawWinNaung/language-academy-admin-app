@@ -84,6 +84,7 @@ export async function GET(request: NextRequest) {
       student_email: row.student_email,
       student_phone: row.student_phone,
       class_id: row.class_id,
+      enrollment_id: row.enrollment_id,
       class_name: row.class_name,
       course_title: row.course_title,
       class_status: calculateClassStatus(

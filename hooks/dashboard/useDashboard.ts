@@ -7,12 +7,11 @@ import { DashboardSummaryMetrics } from "@/types/dashboard";
 export function useDashboard(selectedMonth?: string) {
   const monthParam = selectedMonth || new Date().toISOString().slice(0, 7);
 
-  const { data, error, isLoading, mutate } = useSWR(
-    `/api/dashboard/class-payments?month=${monthParam}`,
-    fetchDashboardClassPayments,
+  const cacheKey = ["dashboard-class-payments", monthParam];
+  const { data, error, isLoading, mutate } = useSWR(cacheKey, () =>
+    fetchDashboardClassPayments(monthParam),
   );
 
-  // Compute metrics from fetched data
   const metrics: DashboardSummaryMetrics = {
     activeStudents: 0,
     ongoingClasses: 0,
@@ -27,7 +26,6 @@ export function useDashboard(selectedMonth?: string) {
     let unpaid = 0;
     let completedUnpaid = 0;
 
-    // Ongoing classes metrics calculation
     data.data.forEach((cls) => {
       unpaid += cls.stats.unpaid;
       cls.students.forEach((s) => {
@@ -38,7 +36,6 @@ export function useDashboard(selectedMonth?: string) {
       });
     });
 
-    // Completed classes with unpaid records calculation
     (data.completed_unpaid_data || []).forEach((cls) => {
       completedUnpaid += cls.stats.unpaid;
     });

@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     const totalPages = Math.ceil(totalItems / limit) || 1;
 
     const [courses] = await pool.query<RowDataPacket[]>(
-      `SELECT id, code, title, description, is_archived, created_at, updated_at
+      `SELECT id, code, title, description, tuition_fee, is_archived, created_at, updated_at
        FROM courses
        ${whereClause}
        ORDER BY id DESC
@@ -83,19 +83,27 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { code, title, description } = body;
+    const { code, title, description, tuition_fee } = body;
 
-    if (!code || !title) {
+    if (!code || !title || tuition_fee === undefined || tuition_fee === "") {
       return NextResponse.json(
-        { success: false, message: "Code and title are required." },
+        {
+          success: false,
+          message: "Code, title, and tuition fee are required.",
+        },
         { status: 400 },
       );
     }
 
     const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO courses (code, title, description, is_archived, is_deleted)
-       VALUES (?, ?, ?, 0, 0)`,
-      [code.trim(), title.trim(), description ? description.trim() : ""],
+      `INSERT INTO courses (code, title, description, tuition_fee, is_archived, is_deleted)
+       VALUES (?, ?, ?, ?, 0, 0)`,
+      [
+        code.trim(),
+        title.trim(),
+        description ? description.trim() : "",
+        Number(tuition_fee),
+      ],
     );
 
     return NextResponse.json(
@@ -107,6 +115,7 @@ export async function POST(req: NextRequest) {
           code,
           title,
           description,
+          tuition_fee,
           is_archived: false,
         },
       },

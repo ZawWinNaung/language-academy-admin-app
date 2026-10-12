@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FaBookOpen, FaHashtag } from "react-icons/fa";
+import { FaBook, FaTag, FaCoins } from "react-icons/fa";
 import { Course } from "@/types/course";
 
 interface CourseCardProps {
@@ -17,27 +17,39 @@ export default function CourseCard({
   onArchive,
   onUnarchive,
 }: CourseCardProps) {
+  const formattedFee = Math.round(
+    parseFloat(String(course.tuition_fee || "0")),
+  ).toLocaleString();
+
   return (
-    <div className="glass-card rounded-2xl border border-border-main p-5 space-y-4 hover:border-brand-primary/40 transition-all flex flex-col justify-between">
+    <div className="group relative bg-surface border border-border-main hover:border-brand-primary/50 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
       <div className="space-y-3">
-        <div className="flex items-start gap-3 border-b border-border-main pb-3">
-          <div className="w-10 h-10 rounded-xl bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold shrink-0 mt-0.5">
-            <FaBookOpen className="text-sm" />
+        <div className="flex items-start gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary shrink-0 transition-transform group-hover:scale-105 duration-300">
+            <FaBook className="text-sm" />
           </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-bold text-text-main text-sm line-clamp-2 leading-snug">
+          <div className="min-w-0 flex-1 space-y-1">
+            <h3 className="font-bold text-text-main text-sm leading-snug line-clamp-2">
               {course.title}
             </h3>
-            <span className="text-brand-primary font-mono font-bold text-xs mt-0.5 block">
-              {course.code}
-            </span>
+
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-brand-primary bg-brand-primary/5 border border-brand-primary/15 px-2 py-0.5 rounded-md">
+                <FaTag className="text-[9px]" />
+                {course.code}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-text-main bg-surface-hover border border-border-main px-2 py-0.5 rounded-md shadow-2xs">
+                <FaCoins className="text-[9px] text-amber-500" />
+                {formattedFee} MMK
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="text-xs text-text-muted leading-relaxed min-h-10">
+      <div className="py-4 my-2 text-xs text-text-muted leading-relaxed">
         <p className="line-clamp-2">
-          {course.description || "No description provided."}
+          {course.description || "No description provided for this course."}
         </p>
       </div>
 

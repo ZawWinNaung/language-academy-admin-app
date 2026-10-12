@@ -33,3 +33,17 @@ export interface StudentDetailsData {
 }
 
 export type StudentDetailsResponse = ApiResponse<StudentDetailsData>;
+
+export interface Student {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  joined_date?: string;
+}
+
+export interface StudentFormData {
+  name: string;
+  email: string;
+  phone: string;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   FaExclamationTriangle,
   FaFilter,
@@ -9,26 +9,9 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaGraduationCap,
+  FaCheckCircle,
 } from "react-icons/fa";
-
-interface UnpaidStudentItem {
-  student_id: number;
-  student_name: string;
-  student_email: string;
-  student_phone: string;
-  class_id: number;
-  class_name: string;
-  course_title: string;
-  class_status: string;
-  unpaid_month: string;
-}
-
-interface PaginationMeta {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  itemsPerPage: number;
-}
+import { useUnpaidFees } from "@/hooks/dashboard/useUnpaidFees";
 
 const MONTHS = [
   { value: "01", label: "January" },
@@ -46,68 +29,25 @@ const MONTHS = [
 ];
 
 export default function UnpaidFeesOverview() {
+  const {
+    students,
+    pagination,
+    selectedYear,
+    setSelectedYear,
+    selectedMonth,
+    setSelectedMonth,
+    currentPage,
+    setCurrentPage,
+    loading,
+    recordPayment,
+    processingId,
+  } = useUnpaidFees();
+
   const currentDate = new Date();
-  const [selectedYear, setSelectedYear] = useState<string>(
-    String(currentDate.getFullYear()),
-  );
-  const [selectedMonth, setSelectedMonth] = useState<string>(
-    String(currentDate.getMonth() + 1).padStart(2, "0"),
-  );
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
-  const [students, setStudents] = useState<UnpaidStudentItem[]>([]);
-  const [pagination, setPagination] = useState<PaginationMeta>({
-    totalItems: 0,
-    totalPages: 1,
-    currentPage: 1,
-    itemsPerPage: 10,
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-
   const years = Array.from(
     { length: 5 },
     (_, i) => currentDate.getFullYear() - 2 + i,
   );
-
-  const fetchUnpaidStudents = async () => {
-    setLoading(true);
-    try {
-      const queryParams = new URLSearchParams({
-        year: selectedYear,
-        month: selectedMonth,
-        page: String(currentPage),
-        limit: "10",
-      });
-
-      const res = await fetch(
-        `/api/dashboard/unpaid-fees?${queryParams.toString()}`,
-      );
-      const result = await res.json();
-
-      if (result.success) {
-        setStudents(result.data || []);
-        setPagination(result.pagination);
-      }
-    } catch (err) {
-      console.error("Failed to load unpaid fee list:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUnpaidStudents();
-  }, [selectedYear, selectedMonth, currentPage]);
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-    setCurrentPage(1);
-  };
 
   return (
     <div className="space-y-5">
@@ -130,7 +70,7 @@ export default function UnpaidFeesOverview() {
 
           <select
             value={selectedMonth}
-            onChange={handleMonthChange}
+            onChange={(e) => setSelectedMonth(e.target.value)}
             className="bg-surface border border-border-main text-xs text-text-main rounded-xl px-3 py-2 outline-none focus:border-brand-primary shadow-xs"
           >
             {MONTHS.map((m) => (
@@ -142,7 +82,7 @@ export default function UnpaidFeesOverview() {
 
           <select
             value={selectedYear}
-            onChange={handleYearChange}
+            onChange={(e) => setSelectedYear(e.target.value)}
             className="bg-surface border border-border-main text-xs text-text-main rounded-xl px-3 py-2 outline-none focus:border-brand-primary shadow-xs"
           >
             {years.map((y) => (
@@ -161,19 +101,20 @@ export default function UnpaidFeesOverview() {
               <th className="py-3 px-4">Student Name</th>
               <th className="py-3 px-4">Contact Details</th>
               <th className="py-3 px-4">Enrolled Class</th>
-              <th className="py-3 px-4 text-right">Class Status</th>
+              <th className="py-3 px-4 text-center">Class Status</th>
+              <th className="py-3 px-4 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-main text-text-main">
             {loading ? (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-text-dim">
+                <td colSpan={5} className="py-8 text-center text-text-dim">
                   Loading unpaid student list...
                 </td>
               </tr>
             ) : students.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-text-dim">
+                <td colSpan={5} className="py-8 text-center text-text-dim">
                   No unpaid records found for {selectedYear}-{selectedMonth}.
                 </td>
               </tr>
@@ -205,7 +146,7 @@ export default function UnpaidFeesOverview() {
                       {st.course_title}
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-right">
+                  <td className="py-3.5 px-4 text-center">
                     <span
                       className={`text-[10px] px-2.5 py-0.5 rounded-md font-semibold border inline-block ${
                         st.class_status === "Completed"
@@ -215,6 +156,18 @@ export default function UnpaidFeesOverview() {
                     >
                       {st.class_status}
                     </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-right">
+                    <button
+                      onClick={() => recordPayment(st)}
+                      disabled={processingId === st.enrollment_id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-status-success/10 hover:bg-status-success/20 text-status-success border border-status-success/20 font-semibold rounded-xl transition-all cursor-pointer disabled:opacity-50 text-[11px]"
+                    >
+                      <FaCheckCircle />
+                      {processingId === st.enrollment_id
+                        ? "Recording..."
+                        : "Record Payment"}
+                    </button>
                   </td>
                 </tr>
               ))

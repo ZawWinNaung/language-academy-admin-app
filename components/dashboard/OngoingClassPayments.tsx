@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   FaCalendarAlt,
   FaUserGraduate,
@@ -10,56 +10,17 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-
-interface StudentPayment {
-  student_id: number;
-  student_name: string;
-  enrollment_id: number;
-  payment_id: number | null;
-  amount: string | null;
-  paid_date: string | null;
-  status: "Paid" | "Refunded" | "Unpaid";
-}
-
-interface ClassGroup {
-  class_id: number;
-  class_name: string;
-  course_title: string;
-  stats: { paid: number; unpaid: number; refunded: number; total: number };
-  students: StudentPayment[];
-}
+import { useClassPayments } from "@/hooks/dashboard/useClassPayments";
 
 export default function OngoingClassPayments() {
-  const [selectedMonth, setSelectedMonth] = useState<string>(
-    new Date().toISOString().slice(0, 7),
-  );
-  const [classesData, setClassesData] = useState<ClassGroup[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { classesData, selectedMonth, setSelectedMonth, loading } =
+    useClassPayments();
 
   const [expandedClasses, setExpandedClasses] = useState<
     Record<number, boolean>
   >({});
 
   const monthInputRef = useRef<HTMLInputElement>(null);
-
-  const fetchDashboardData = async (month: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/dashboard/class-payments?month=${month}`);
-      const result = await res.json();
-      if (result.success) {
-        setClassesData(result.data);
-      }
-    } catch (err) {
-      console.error("Failed to fetch dashboard class payments", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboardData(selectedMonth);
-  }, [selectedMonth]);
 
   const handleMonthContainerClick = () => {
     const input = monthInputRef.current;

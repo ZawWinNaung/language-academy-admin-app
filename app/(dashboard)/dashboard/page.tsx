@@ -5,7 +5,7 @@ import OngoingClassPayments from "@/components/dashboard/OngoingClassPayments";
 import UnpaidFeesOverview from "@/components/dashboard/UnpaidFeesOverview";
 import DashboardMetricsGrid from "@/components/dashboard/DashboardMetricsGrid";
 import HeaderBar from "@/components/ui/HeaderBar";
-import { useDashboard } from "@/hooks/useDashboard";
+import { useDashboard } from "@/hooks/dashboard/useDashboard";
 
 export default function DashboardPage() {
   const { metrics, loading } = useDashboard();

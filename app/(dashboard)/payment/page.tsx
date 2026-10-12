@@ -1,67 +1,151 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PaymentCard, { Payment } from "@/components/payments/PaymentCard";
+import React, { useState } from "react";
 import { FilterBar } from "@/components/ui/FilterBar";
 import HeaderBar from "@/components/ui/HeaderBar";
+import DataTable, { Column } from "@/components/ui/DataTable";
+import { usePayments } from "@/hooks/payments/usePayments";
+import { usePaymentMutations } from "@/hooks/payments/usePaymentMutations";
+import { PaymentItem } from "@/types/payment";
 
 export default function PaymentsPage() {
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [monthFilter, setMonthFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchPayments = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (searchQuery) params.append("search", searchQuery);
-      if (selectedStatus) params.append("status", selectedStatus);
-      if (selectedMonth) params.append("payment_month", selectedMonth);
+  const pageSize = 20;
 
-      const res = await fetch(`/api/payments?${params.toString()}`);
-      const result = await res.json();
+  const { payments, pagination, loading, refreshPayments } = usePayments({
+    page: currentPage,
+    limit: pageSize,
+    status: statusFilter,
+    payment_month: monthFilter,
+    search: searchQuery,
+  });
 
-      if (result.success) {
-        setPayments(result.data);
-      }
-    } catch (error) {
-      console.error("Failed to load payments:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { updatePaymentStatus } = usePaymentMutations(refreshPayments);
 
-  const isFiltered = Boolean(searchQuery || selectedStatus || selectedMonth);
+  const isFiltered = Boolean(searchQuery || statusFilter || monthFilter);
   const handleReset = () => {
     setSearchQuery("");
-    setSelectedStatus("");
-    setSelectedMonth("");
+    setStatusFilter("");
+    setMonthFilter("");
+    setCurrentPage(1);
   };
 
-  useEffect(() => {
-    fetchPayments();
-  }, [searchQuery, selectedStatus, selectedMonth]);
-
-  // Toggle status between 'Paid' and 'Refunded'
-  const handleUpdateStatus = async (payment: Payment) => {
+  const handleUpdateStatus = async (payment: PaymentItem) => {
     const newStatus = payment.status === "Paid" ? "Refunded" : "Paid";
-
-    try {
-      const res = await fetch("/api/payments", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: payment.id, status: newStatus }),
-      });
-
-      if (res.ok) {
-        fetchPayments();
-      }
-    } catch (error) {
-      console.error("Failed to update status:", error);
-    }
+    await updatePaymentStatus(payment.id, newStatus);
   };
+
+  const columns: Column<PaymentItem>[] = [
+    {
+      header: "Student",
+      className: "text-center",
+      render: (item) => (
+        <span className="font-semibold text-text-main">
+          {item.student_name || "Unknown Student"}
+        </span>
+      ),
+    },
+    {
+      header: "Course",
+      className: "text-center",
+      render: (item) => (
+        <div className="text-center">
+          <span className="font-medium text-text-main">
+            {item.course_title || "N/A"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "Class",
+      className: "text-center",
+      render: (item) => (
+        <div className="text-center">
+          <span className="text-text-muted">{item.class_name || "N/A"}</span>
+        </div>
+      ),
+    },
+    {
+      header: "Month",
+      className: "text-center",
+      render: (item) => (
+        <div className="text-center">
+          <span className="font-mono text-xs text-brand-primary">
+            {item.payment_month}
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "Amount",
+      className: "text-center",
+      render: (item) => (
+        <div className="text-center">
+          <span className="font-bold text-text-main">
+            {Math.round(parseFloat(item.amount || "0")).toLocaleString()} MMK
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "Paid Date",
+      className: "text-center",
+      render: (item) => (
+        <div className="text-center">
+          <span className="text-text-muted">
+            {item.paid_date
+              ? new Date(item.paid_date).toLocaleDateString()
+              : "N/A"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "Status",
+      className: "text-center",
+      render: (item) => {
+        const isPaid = item.status === "Paid";
+        return (
+          <div className="text-center">
+            <span
+              className={`px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider inline-block ${
+                isPaid
+                  ? "bg-status-success/10 text-status-success border-status-success/20"
+                  : "bg-status-danger/10 text-status-danger border-status-danger/20"
+              }`}
+            >
+              {item.status}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      header: "Actions",
+      className: "text-center",
+      render: (item) => {
+        const isPaid = item.status === "Paid";
+        return (
+          <div className="text-center">
+            <button
+              onClick={() => handleUpdateStatus(item)}
+              className={`text-[11px] font-semibold bg-transparent border-none cursor-pointer transition-all hover:underline ${
+                isPaid
+                  ? "text-status-danger hover:opacity-80"
+                  : "text-status-success hover:opacity-80"
+              }`}
+            >
+              {isPaid ? "Mark as Refunded" : "Mark as Paid"}
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -73,14 +157,20 @@ export default function PaymentsPage() {
       <FilterBar>
         <FilterBar.Search
           value={searchQuery}
-          onChange={setSearchQuery}
+          onChange={(val) => {
+            setSearchQuery(val);
+            setCurrentPage(1);
+          }}
           placeholder="Search student or enrollment ID..."
         />
 
         <FilterBar.Group>
           <FilterBar.Select
-            value={selectedStatus}
-            onChange={setSelectedStatus}
+            value={statusFilter}
+            onChange={(val) => {
+              setStatusFilter(val);
+              setCurrentPage(1);
+            }}
             placeholder="All Statuses"
             options={[
               { label: "Paid", value: "Paid" },
@@ -89,46 +179,36 @@ export default function PaymentsPage() {
           />
 
           <FilterBar.MonthPicker
-            value={selectedMonth}
-            onChange={setSelectedMonth}
+            value={monthFilter}
+            onChange={(val) => {
+              setMonthFilter(val);
+              setCurrentPage(1);
+            }}
           />
 
           {isFiltered && <FilterBar.Reset onReset={handleReset} />}
 
           <FilterBar.Counter
-            filteredCount={payments.length}
-            totalCount={payments.length}
+            filteredCount={pagination.totalRecords}
+            totalCount={pagination.totalRecords}
           />
         </FilterBar.Group>
       </FilterBar>
 
-      {/* Grid View */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="h-44 bg-surface-hover border border-border-main rounded-2xl animate-pulse"
-            />
-          ))}
-        </div>
-      ) : payments.length === 0 ? (
-        <div className="text-center py-12 bg-surface border border-border-main rounded-2xl">
-          <p className="text-text-muted text-sm">
-            No payment records found matching your filters.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {payments.map((payment) => (
-            <PaymentCard
-              key={payment.id}
-              payment={payment}
-              onUpdateStatus={handleUpdateStatus}
-            />
-          ))}
-        </div>
-      )}
+      <DataTable<PaymentItem>
+        data={payments}
+        columns={columns}
+        loading={loading}
+        emptyMessage="No payment records found matching your filters."
+        keyExtractor={(item) => item.id}
+        pagination={{
+          currentPage,
+          totalPages: pagination.totalPages,
+          onPageChange: (page) => setCurrentPage(page),
+          totalItems: pagination.totalRecords,
+          pageSize,
+        }}
+      />
     </div>
   );
 }

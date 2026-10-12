@@ -16,7 +16,8 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/classes") ||
     pathname.startsWith("/courses") ||
     pathname.startsWith("/timetable") ||
-    pathname.startsWith("/payment");
+    pathname.startsWith("/payment") ||
+    pathname.startsWith("/enrollments");
 
   const isLoginPage = pathname === "/login";
   const isRootPage = pathname === "/";

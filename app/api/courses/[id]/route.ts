@@ -21,7 +21,7 @@ export async function GET(
     }
 
     const [rows] = await pool.query<CourseRow[]>(
-      `SELECT id, code, title, COALESCE(description, '') AS description, created_at, updated_at
+      `SELECT id, code, title, COALESCE(description, '') AS description, tuition_fee, created_at, updated_at
        FROM courses
        WHERE id = ?`,
       [courseId],
@@ -30,7 +30,7 @@ export async function GET(
     if (rows.length === 0) {
       return NextResponse.json(
         { success: false, message: "Course not found." },
-        { status: 444 },
+        { status: 404 },
       );
     }
 
@@ -63,11 +63,19 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { code, title, description } = body;
+    const { code, title, description, tuition_fee } = body;
 
-    if (!code?.trim() || !title?.trim()) {
+    if (
+      !code?.trim() ||
+      !title?.trim() ||
+      tuition_fee === undefined ||
+      tuition_fee === ""
+    ) {
       return NextResponse.json(
-        { success: false, message: "Course code and title are required." },
+        {
+          success: false,
+          message: "Course code, title, and tuition fee are required.",
+        },
         { status: 400 },
       );
     }
@@ -75,6 +83,7 @@ export async function PUT(
     const trimmedCode = code.trim();
     const trimmedTitle = title.trim();
     const trimmedDesc = description?.trim() ?? "";
+    const parsedFee = Number(tuition_fee);
 
     if (trimmedCode.length > 20 || trimmedTitle.length > 150) {
       return NextResponse.json(
@@ -89,9 +98,9 @@ export async function PUT(
 
     const [result] = await pool.query<ResultSetHeader>(
       `UPDATE courses
-       SET code = ?, title = ?, description = ?
+       SET code = ?, title = ?, description = ?, tuition_fee = ?
        WHERE id = ?`,
-      [trimmedCode, trimmedTitle, trimmedDesc, courseId],
+      [trimmedCode, trimmedTitle, trimmedDesc, parsedFee, courseId],
     );
 
     if (result.affectedRows === 0) {
@@ -110,6 +119,7 @@ export async function PUT(
           code: trimmedCode,
           title: trimmedTitle,
           description: trimmedDesc,
+          tuition_fee: parsedFee,
         },
       },
       { status: 200 },

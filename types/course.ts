@@ -5,6 +5,7 @@ export interface Course {
   code: string;
   title: string;
   description: string;
+  tuition_fee: string | number;
   is_archived?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -22,12 +23,14 @@ export interface CourseFormData {
   code: string;
   title: string;
   description: string;
+  tuition_fee: string | number;
 }
 
 export interface CreateCourseInput {
   code: string;
   title: string;
   description?: string;
+  tuition_fee: number | string;
 }
 
 export interface PaginationInfo {

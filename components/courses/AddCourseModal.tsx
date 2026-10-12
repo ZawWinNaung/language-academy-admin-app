@@ -1,5 +1,3 @@
-"use client";
-
 import { CourseFormData } from "@/types/course";
 
 interface AddCourseModalProps {
@@ -60,6 +58,23 @@ export default function AddCourseModal({
               value={formData.title}
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
+              }
+              className="w-full bg-surface-hover border border-border-main rounded-xl px-3.5 py-2.5 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+              Tuition Fee (MMK)
+            </label>
+            <input
+              type="number"
+              required
+              min="0"
+              step="1"
+              placeholder="e.g. 150000"
+              value={formData.tuition_fee}
+              onChange={(e) =>
+                setFormData({ ...formData, tuition_fee: e.target.value })
               }
               className="w-full bg-surface-hover border border-border-main rounded-xl px-3.5 py-2.5 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
             />

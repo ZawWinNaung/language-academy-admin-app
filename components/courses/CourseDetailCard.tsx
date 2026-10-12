@@ -20,6 +20,7 @@ export default function CourseDetailCard({
     code: course.code,
     title: course.title,
     description: course.description || "",
+    tuition_fee: course.tuition_fee || "",
   });
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function CourseDetailCard({
         code: course.code,
         title: course.title,
         description: course.description || "",
+        tuition_fee: course.tuition_fee || "",
       });
     }
   }, [course]);
@@ -84,6 +86,24 @@ export default function CourseDetailCard({
               setFormData({ ...formData, title: e.target.value })
             }
             className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary"
+          />
+        </div>
+
+        <div>
+          <label className="text-text-muted block mb-1 font-medium uppercase tracking-wider text-[10px]">
+            Tuition Fee (MMK)
+          </label>
+          <input
+            type="number"
+            required
+            min="0"
+            step="1"
+            disabled={!isEditing}
+            value={formData.tuition_fee}
+            onChange={(e) =>
+              setFormData({ ...formData, tuition_fee: e.target.value })
+            }
+            className="w-full bg-surface-hover border border-border-main rounded-xl px-3 py-2 text-text-main disabled:opacity-60 focus:outline-none focus:border-brand-primary font-semibold"
           />
         </div>
 

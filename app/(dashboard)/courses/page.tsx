@@ -38,6 +38,7 @@ export default function CoursesPage() {
     code: "",
     title: "",
     description: "",
+    tuition_fee: "",
   });
 
   // Archive & Unarchive States
@@ -54,7 +55,7 @@ export default function CoursesPage() {
     const success = await handleCreateCourse(formData);
     if (success) {
       setIsModalOpen(false);
-      setFormData({ code: "", title: "", description: "" });
+      setFormData({ code: "", title: "", description: "", tuition_fee: "" });
     }
   };
 

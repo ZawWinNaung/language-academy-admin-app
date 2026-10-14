@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
+import { useAdminSession } from "@/hooks/admin/useAdminSession";
 
 export interface User {
   name: string;
@@ -17,51 +19,21 @@ export default function UserProfile({
   currentUser,
   onLogoutClick,
 }: UserProfileProps) {
-  const [user, setUser] = useState<User | null>(currentUser || null);
-  const [loading, setLoading] = useState(!currentUser);
-
-  useEffect(() => {
-    if (currentUser) {
-      setUser(currentUser);
-      setLoading(false);
-      return;
-    }
-
-    const fetchAdminUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user || data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch logged-in user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAdminUser();
-  }, [currentUser]);
-
-  const getInitials = (name?: string) => {
-    if (!name) return "AD";
-    const parts = name.trim().split(" ");
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  };
+  const router = useRouter();
+  const { user, loading, getInitials } = useAdminSession(currentUser);
 
   return (
     <div className="p-4 border-t border-border-main">
-      <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-hover border border-border-main hover:border-brand-primary/40 transition-all">
+      <div
+        onClick={() => router.push("/settings")}
+        className="flex items-center justify-between p-2.5 rounded-xl bg-surface-hover border border-border-main hover:border-brand-primary/40 transition-all cursor-pointer group"
+      >
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-xs shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-brand-primary-light border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
             {getInitials(user?.name)}
           </div>
           <div className="truncate">
-            <p className="text-xs font-semibold text-text-main truncate">
+            <p className="text-xs font-semibold text-text-main truncate group-hover:text-brand-primary transition-colors">
               {loading ? (
                 <span className="inline-block w-20 h-3 bg-surface-hover animate-pulse rounded" />
               ) : (
@@ -78,9 +50,11 @@ export default function UserProfile({
           </div>
         </div>
 
-        {/* Logout Trigger Button */}
         <button
-          onClick={onLogoutClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            onLogoutClick();
+          }}
           title="Sign Out"
           aria-label="Sign Out"
           className="p-1.5 rounded-lg text-text-dim hover:text-status-danger hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all shrink-0 ml-1 cursor-pointer"

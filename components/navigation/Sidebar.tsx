@@ -1,15 +1,16 @@
 "use client";
 
 import React from "react";
-import UserProfile, { User } from "./UserProfile";
+import UserProfile from "./UserProfile";
 import SidebarHeader from "./SidebarHeader";
 import SidebarNav from "./SidebarNav";
+import { AdminProfile } from "@/types/admin";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenLogoutModal: () => void;
-  currentUser?: User;
+  currentUser?: AdminProfile;
 }
 
 export default function Sidebar({

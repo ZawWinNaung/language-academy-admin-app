@@ -9,40 +9,45 @@ export async function proxy(request: NextRequest) {
   const payload = token ? await verifyJWT(token) : null;
   const isAuthenticated = !!payload;
 
-  const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/students") ||
-    pathname.startsWith("/teachers") ||
-    pathname.startsWith("/classes") ||
-    pathname.startsWith("/courses") ||
-    pathname.startsWith("/timetable") ||
-    pathname.startsWith("/payment") ||
-    pathname.startsWith("/enrollments");
+  const isApiRoute = pathname.startsWith("/api/");
+  const isPublicApi = pathname === "/api/auth/login";
+  const isPublicPage = pathname === "/" || pathname === "/login";
 
-  const isLoginPage = pathname === "/login";
-  const isRootPage = pathname === "/";
-
-  if (isRootPage && isAuthenticated) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (isProtectedRoute && !isAuthenticated) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    if (token) {
-      response.cookies.delete("admin_session");
+  if (!isAuthenticated) {
+    if (isApiRoute && !isPublicApi) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized - Authentication required" },
+        { status: 401 },
+      );
     }
-    return response;
+
+    if (!isApiRoute && !isPublicPage) {
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      if (token) {
+        response.cookies.delete("admin_session");
+      }
+      return response;
+    }
   }
 
-  if (isLoginPage && isAuthenticated) {
+  if (isAuthenticated && isPublicPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  if (payload && payload.id) {
+    requestHeaders.set("x-admin-id", String(payload.id));
+  }
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

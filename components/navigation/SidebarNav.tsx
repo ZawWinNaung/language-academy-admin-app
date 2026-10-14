@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 import {
-  FaSchool,
-  FaHome,
-  FaUserGraduate,
-  FaChalkboardTeacher,
   FaBookOpen,
+  FaChalkboardTeacher,
+  FaCog,
+  FaHome,
+  FaSchool,
+  FaUserGraduate,
 } from "react-icons/fa";
-import { RiCalendarScheduleFill } from "react-icons/ri";
 import { MdPayment } from "react-icons/md";
 
 const navigation = [
@@ -20,6 +19,7 @@ const navigation = [
   { name: "Courses", href: "/courses", icon: <FaBookOpen /> },
   { name: "Classes", href: "/classes", icon: <FaSchool /> },
   { name: "Payment", href: "/payment", icon: <MdPayment /> },
+  { name: "Admin Settings", href: "/settings", icon: <FaCog /> },
 ];
 
 interface SidebarNavProps {

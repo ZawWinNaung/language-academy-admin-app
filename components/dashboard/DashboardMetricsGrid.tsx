@@ -51,7 +51,9 @@ export default function DashboardMetricsGrid({
         <div>
           <p className="text-xs font-medium text-text-muted">Monthly Revenue</p>
           <h3 className="text-2xl font-bold text-text-main tracking-tight mt-0.5">
-            {loading ? "..." : `$${metrics.monthlyRevenue.toFixed(2)}`}
+            {loading
+              ? "..."
+              : `${Math.round(metrics.monthlyRevenue).toLocaleString()} MMK`}
           </h3>
         </div>
       </div>

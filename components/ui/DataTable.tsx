@@ -21,6 +21,7 @@ interface DataTableProps<T> {
     label: string;
     onClick: () => void;
     icon?: ReactNode;
+    disabled?: boolean;
   };
   pagination?: {
     currentPage: number;
@@ -44,6 +45,7 @@ export default function DataTable<T>({
   onItemClick,
 }: DataTableProps<T>) {
   const showHeader = Boolean(title || actionButton);
+  const { label, onClick, icon, disabled = false } = actionButton || {};
 
   return (
     <div className="glass-card rounded-2xl border border-border-main bg-surface overflow-hidden shadow-xs flex flex-col h-full">
@@ -58,10 +60,11 @@ export default function DataTable<T>({
           )}
           {actionButton && (
             <button
-              onClick={actionButton.onClick}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-semibold rounded-xl transition-all cursor-pointer"
+              onClick={onClick}
+              disabled={disabled}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer"
             >
-              {actionButton.icon} {actionButton.label}
+              {icon} {label}
             </button>
           )}
         </div>

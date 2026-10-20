@@ -171,9 +171,10 @@ export default function ClassDetailPage({
               emptyMessage="No students enrolled in this class yet."
               title={`Enrolled Students (${totalItems})`}
               actionButton={{
-                label: isCompleted ? "Enroll" : "Enroll Students",
+                label: "Enroll Students",
                 onClick: () => setIsModalOpen(true),
                 icon: <FaUserPlus className="text-[11px]" />,
+                disabled: isCompleted,
               }}
               pagination={{
                 currentPage,
@@ -190,10 +191,7 @@ export default function ClassDetailPage({
             />
           </div>
 
-          <ClassScheduleSection
-            classId={classId}
-            classStatus={classDetail?.class_status}
-          />
+          <ClassScheduleSection classId={classId} classDetail={classDetail} />
         </div>
       </div>
 

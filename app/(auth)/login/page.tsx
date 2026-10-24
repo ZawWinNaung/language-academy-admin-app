@@ -2,38 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLogin } from "@/hooks/admin/useLogin";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { isAuthenticating, errorMessage, login } = useLogin();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsAuthenticating(true);
-    setErrorMessage("");
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        router.push("/dashboard");
-      } else {
-        setErrorMessage(data.message || "Invalid credentials provided.");
-      }
-    } catch (err) {
-      setErrorMessage("Network error occurred. Please try again.");
-    } finally {
-      setIsAuthenticating(false);
-    }
+    const success = await login({ email, password });
+    if (success) router.push("/dashboard");
   };
 
   return (

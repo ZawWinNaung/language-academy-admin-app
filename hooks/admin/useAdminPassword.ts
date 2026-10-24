@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { adminService } from "@/services/adminService";
+import { AdminPasswordFormData } from "@/types/admin";
 
 export function useAdminPassword() {
   const [updating, setUpdating] = useState(false);
@@ -10,7 +11,7 @@ export function useAdminPassword() {
     text: string;
   } | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AdminPasswordFormData>({
     current_password: "",
     new_password: "",
     confirm_password: "",

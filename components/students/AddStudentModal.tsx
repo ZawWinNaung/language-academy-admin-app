@@ -47,10 +47,14 @@ export default function AddStudentModal({
         </div>
         <form onSubmit={onSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+            <label
+              htmlFor="student-full-name"
+              className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider"
+            >
               Full Name
             </label>
             <input
+              id="student-full-name"
               type="text"
               required
               placeholder="e.g. Aung Kyaw Thu"
@@ -62,10 +66,14 @@ export default function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+            <label
+              htmlFor="student-email"
+              className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider"
+            >
               Email Address
             </label>
             <input
+              id="student-email"
               type="email"
               required
               placeholder="e.g. student@gmail.com"
@@ -77,10 +85,14 @@ export default function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+            <label
+              htmlFor="student-phone"
+              className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider"
+            >
               Phone Number
             </label>
             <input
+              id="student-phone"
               type="text"
               required
               placeholder="e.g. +959450011223"
@@ -92,10 +104,14 @@ export default function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
+            <label
+              htmlFor="student-joined-date"
+              className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider"
+            >
               Joined Date
             </label>
             <input
+              id="student-joined-date"
               type="date"
               required
               value={formData.joined_date}

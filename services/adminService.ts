@@ -2,10 +2,22 @@ import {
   AdminProfile,
   UpdateProfilePayload,
   UpdatePasswordPayload,
+  InviteAdminPayload,
+  LoginCredentials,
+  LoginResponse,
 } from "@/types/admin";
-import { InviteAdminPayload } from "@/types/admin";
 
 export const adminService = {
+  async login(payload: LoginCredentials): Promise<LoginResponse> {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data: LoginResponse = await res.json();
+    return { ...data, success: res.ok && data.success };
+  },
+
   async getProfile(): Promise<{
     success: boolean;
     user?: AdminProfile;

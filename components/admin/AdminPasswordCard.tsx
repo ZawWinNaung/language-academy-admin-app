@@ -3,14 +3,11 @@
 import React from "react";
 import { FaLock } from "react-icons/fa";
 import StatusMessageCard from "@/components/common/StatusMessageBox";
+import { AdminPasswordFormData } from "@/types/admin";
 
 interface AdminPasswordCardProps {
-  passwordData: {
-    current_password: string;
-    new_password: string;
-    confirm_password: string;
-  };
-  setPasswordData: (data: any) => void;
+  passwordData: AdminPasswordFormData;
+  setPasswordData: React.Dispatch<React.SetStateAction<AdminPasswordFormData>>;
   updating: boolean;
   message: { type: "success" | "error"; text: string } | null;
   setMessage: (msg: { type: "success" | "error"; text: string } | null) => void;
@@ -39,10 +36,14 @@ export default function AdminPasswordCard({
 
           <div className="space-y-4 text-xs">
             <div>
-              <label className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]">
+              <label
+                htmlFor="current-password"
+                className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]"
+              >
                 Current Password
               </label>
               <input
+                id="current-password"
                 type="password"
                 required
                 placeholder="••••••••"
@@ -58,10 +59,14 @@ export default function AdminPasswordCard({
             </div>
 
             <div>
-              <label className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]">
+              <label
+                htmlFor="new-password"
+                className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]"
+              >
                 New Password
               </label>
               <input
+                id="new-password"
                 type="password"
                 required
                 placeholder="••••••••"
@@ -77,10 +82,14 @@ export default function AdminPasswordCard({
             </div>
 
             <div>
-              <label className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]">
+              <label
+                htmlFor="confirm-new-password"
+                className="block text-text-muted font-medium mb-1.5 uppercase tracking-wider text-[10px]"
+              >
                 Confirm New Password
               </label>
               <input
+                id="confirm-new-password"
                 type="password"
                 required
                 placeholder="••••••••"

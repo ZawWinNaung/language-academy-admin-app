@@ -22,7 +22,7 @@ export default function CourseCard({
   ).toLocaleString();
 
   return (
-    <div className="group relative bg-surface border border-border-main hover:border-brand-primary/50 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+    <div className="group relative bg-surface border border-border-main hover:border-brand-primary/50 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full">
       <div className="space-y-3">
         <div className="flex items-start gap-3.5">
           <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary shrink-0 transition-transform group-hover:scale-105 duration-300">
@@ -48,7 +48,7 @@ export default function CourseCard({
       </div>
 
       <div className="py-4 my-2 text-xs text-text-muted leading-relaxed">
-        <p className="line-clamp-2">
+        <p className="line-clamp-2 h-10">
           {course.description || "No description provided for this course."}
         </p>
       </div>

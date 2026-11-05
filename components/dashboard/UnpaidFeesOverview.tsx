@@ -161,9 +161,9 @@ export default function UnpaidFeesOverview() {
                     <button
                       onClick={() => recordPayment(st)}
                       disabled={processingId === st.enrollment_id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-status-success/10 hover:bg-status-success/20 text-status-success border border-status-success/20 font-semibold rounded-xl transition-all cursor-pointer disabled:opacity-50 text-[11px]"
+                      className={`text-[11px] font-semibold bg-transparent border-none cursor-pointer transition-all hover:underline text-brand-primary hover:opacity-80"
+              }`}
                     >
-                      <FaCheckCircle />
                       {processingId === st.enrollment_id
                         ? "Recording..."
                         : "Record Payment"}

@@ -15,7 +15,6 @@ export function useStudents() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
-  // Include pagination query parameters in the SWR key
   const { data, error, isLoading, mutate } = useSWR(
     `/api/students?page=${currentPage}&limit=${pageSize}`,
     fetchStudentsList,
@@ -40,25 +39,32 @@ export function useStudents() {
       s.phone.includes(searchQuery),
   );
 
-  const handleCreateStudent = async (): Promise<boolean> => {
+  const handleCreateStudent = async (): Promise<{
+    success: boolean;
+    message?: string;
+  }> => {
     setSubmitting(true);
     try {
       const result = await createStudent(formData);
       if (result.success) {
         setFormData(INITIAL_FORM_DATA);
         await mutate();
-        return true;
+        return { success: true };
       }
-      alert(result.message || "Failed to create student");
-      return false;
+      return {
+        success: false,
+        message: result.message || "Failed to create student",
+      };
     } catch (err) {
       console.error("Error adding student:", err);
-      return false;
+      return {
+        success: false,
+        message: "An unexpected error occurred while saving the student.",
+      };
     } finally {
       setSubmitting(false);
     }
   };
-
   return {
     students,
     filteredStudents,

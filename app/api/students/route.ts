@@ -57,38 +57,64 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await req.json();
     const { name, email, phone, joined_date } = body;
 
     if (!name || !email || !phone || !joined_date) {
       return NextResponse.json(
-        { success: false, message: "Missing required fields" },
+        { success: false, message: "All fields are required." },
+        { status: 400 },
+      );
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    const [existing] = await pool.query<RowDataPacket[]>(
+      `SELECT id FROM students WHERE LOWER(email) = ? AND is_deleted = 0`,
+      [trimmedEmail],
+    );
+
+    if (existing.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "A student with this email address already exists.",
+        },
         { status: 400 },
       );
     }
 
     const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO students (name, email, phone, joined_date) VALUES (?, ?, ?, ?)`,
-      [name, email, phone, joined_date],
+      `INSERT INTO students (name, email, phone, joined_date, is_deleted)
+       VALUES (?, ?, ?, ?, 0)`,
+      [name.trim(), trimmedEmail, phone.trim(), joined_date],
     );
 
     return NextResponse.json(
       {
         success: true,
-        message: "Student created successfully",
-        id: result.insertId,
+        message: "Student registered successfully",
+        data: { id: result.insertId },
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch (error: any) {
+    console.error("POST Student API Error:", error);
+
+    if (error.code === "ER_DUP_ENTRY" || error.errno === 1062) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "A student with this email address already exists.",
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to create student",
-        error: String(error),
-      },
+      { success: false, message: "Failed to create student" },
       { status: 500 },
     );
   }

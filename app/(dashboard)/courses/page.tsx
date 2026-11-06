@@ -50,13 +50,31 @@ export default function CoursesPage() {
     useState<Course | null>(null);
   const [isUnarchiving, setIsUnarchiving] = useState<boolean>(false);
 
+  const [modalError, setModalError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await handleCreateCourse(formData);
-    if (success) {
-      setIsModalOpen(false);
-      setFormData({ code: "", title: "", description: "", tuition_fee: "" });
+    setModalError(null);
+
+    const result = await handleCreateCourse(formData);
+
+    if (!result.success) {
+      setModalError(result.message || "Failed to create course");
+      return;
     }
+    setIsModalOpen(false);
+    setFormData({ code: "", title: "", description: "", tuition_fee: "" });
+    setModalError(null);
+  };
+
+  const handleOpenModal = () => {
+    setModalError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalError(null);
+    setIsModalOpen(false);
   };
 
   const handleConfirmArchive = async () => {
@@ -161,11 +179,15 @@ export default function CoursesPage() {
 
       <AddCourseModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleSubmit}
         formData={formData}
-        setFormData={setFormData}
+        setFormData={(val) => {
+          setFormData(val);
+          if (modalError) setModalError(null);
+        }}
         submitting={submitting}
+        error={modalError}
       />
 
       {/* Archive Modal */}

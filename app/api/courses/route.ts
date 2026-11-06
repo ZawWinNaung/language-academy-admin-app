@@ -95,11 +95,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const trimmedCode = code.trim();
+
     const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO courses (code, title, description, tuition_fee, is_archived, is_deleted)
-       VALUES (?, ?, ?, ?, 0, 0)`,
+      `INSERT INTO courses (code, title, description, tuition_fee, is_archived)
+       VALUES (?, ?, ?, ?, 0)`,
       [
-        code.trim(),
+        trimmedCode,
         title.trim(),
         description ? description.trim() : "",
         Number(tuition_fee),
@@ -112,7 +114,7 @@ export async function POST(req: NextRequest) {
         message: "Course created successfully",
         data: {
           id: result.insertId,
-          code,
+          code: trimmedCode,
           title,
           description,
           tuition_fee,
@@ -121,8 +123,19 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("POST Course API Error:", error);
+
+    if (error.code === "ER_DUP_ENTRY" || error.errno === 1062) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `A course with this code already exists. Course codes must be unique.`,
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       { success: false, message: "Failed to create course" },
       { status: 500 },

@@ -19,6 +19,7 @@ interface AddStudentModalProps {
     }>
   >;
   submitting: boolean;
+  error?: string | null;
 }
 
 export default function AddStudentModal({
@@ -28,6 +29,7 @@ export default function AddStudentModal({
   formData,
   setFormData,
   submitting,
+  error,
 }: AddStudentModalProps) {
   if (!isOpen) return null;
 
@@ -83,6 +85,11 @@ export default function AddStudentModal({
               }
               className="w-full bg-surface-hover border border-border-main rounded-xl px-3.5 py-2.5 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
             />
+            {error && (
+              <p className="text-[11px] text-status-danger mt-1.5 font-medium">
+                {error}
+              </p>
+            )}
           </div>
           <div>
             <label

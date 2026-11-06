@@ -21,21 +21,25 @@ export function useCourses({ page = 1, limit = 20, search = "", status = "" }) {
 
   const handleCreateCourse = async (
     course: CreateCourseInput,
-  ): Promise<boolean> => {
+  ): Promise<{ success: boolean; message?: string }> => {
     setSubmitting(true);
     try {
       const result = await createCourse(course);
       if (!result.success) {
-        alert(result.message || "Failed to create course");
-        return false;
+        return {
+          success: false,
+          message: result.message || "Failed to create course",
+        };
       }
 
       await mutate();
-      return true;
+      return { success: true };
     } catch (err) {
       console.error("Error adding course:", err);
-      alert("An unexpected error occurred while creating the course.");
-      return false;
+      return {
+        success: false,
+        message: "An unexpected error occurred while creating the course.",
+      };
     } finally {
       setSubmitting(false);
     }

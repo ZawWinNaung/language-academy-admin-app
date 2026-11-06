@@ -28,13 +28,25 @@ export default function StudentsPage() {
   } = useStudents();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalError, setModalError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await handleCreateStudent();
-    if (success) {
-      setIsModalOpen(false);
+    setModalError(null);
+
+    const result = await handleCreateStudent();
+    if (!result.success) {
+      setModalError(result.message || "Failed to create student");
+      return;
     }
+
+    setIsModalOpen(false);
+    setModalError(null);
+  };
+
+  const handleCloseModal = () => {
+    setModalError(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -90,11 +102,15 @@ export default function StudentsPage() {
 
       <AddStudentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleSubmit}
         formData={formData}
-        setFormData={setFormData}
+        setFormData={(val) => {
+          setFormData(val);
+          if (modalError) setModalError(null);
+        }}
         submitting={submitting}
+        error={modalError}
       />
     </div>
   );

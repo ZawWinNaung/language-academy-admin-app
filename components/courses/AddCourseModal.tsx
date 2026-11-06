@@ -7,6 +7,7 @@ interface AddCourseModalProps {
   formData: CourseFormData;
   setFormData: React.Dispatch<React.SetStateAction<CourseFormData>>;
   submitting: boolean;
+  error?: string | null;
 }
 
 export default function AddCourseModal({
@@ -16,6 +17,7 @@ export default function AddCourseModal({
   formData,
   setFormData,
   submitting,
+  error,
 }: AddCourseModalProps) {
   if (!isOpen) return null;
 
@@ -26,7 +28,7 @@ export default function AddCourseModal({
           <h3 className="font-bold text-text-main text-sm">Add New Course</h3>
           <button
             onClick={onClose}
-            className="text-text-dim hover:text-text-main text-base"
+            className="text-text-dim hover:text-text-main text-base cursor-pointer"
           >
             ✕
           </button>
@@ -44,8 +46,17 @@ export default function AddCourseModal({
               onChange={(e) =>
                 setFormData({ ...formData, code: e.target.value })
               }
-              className="w-full bg-surface-hover border border-border-main rounded-xl px-3.5 py-2.5 text-xs text-text-main placeholder-text-dim focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+              className={`w-full bg-surface-hover border rounded-xl px-3.5 py-2.5 text-xs text-text-main placeholder-text-dim focus:outline-none focus:ring-1 transition-all ${
+                error
+                  ? "border-status-danger focus:border-status-danger focus:ring-status-danger"
+                  : "border-border-main focus:border-brand-primary focus:ring-brand-primary"
+              }`}
             />
+            {error && (
+              <p className="text-[11px] text-status-danger mt-1.5 font-medium">
+                {error}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
@@ -97,14 +108,14 @@ export default function AddCourseModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-border-main text-text-muted text-xs font-semibold rounded-xl hover:bg-surface-hover transition-colors"
+              className="px-4 py-2 border border-border-main text-text-muted text-xs font-semibold rounded-xl hover:bg-surface-hover transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-xl hover:bg-brand-primary-hover shadow-lg shadow-brand-primary/20 disabled:opacity-50 transition-all"
+              className="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-xl hover:bg-brand-primary-hover shadow-lg shadow-brand-primary/20 disabled:opacity-50 transition-all cursor-pointer"
             >
               {submitting ? "Saving..." : "Save Course"}
             </button>
